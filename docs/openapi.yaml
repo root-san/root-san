@@ -71,7 +71,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Txn'
+              $ref: '#/components/schemas/TxnReuqsutBody'
       responses:
         '200':
           description: OK
@@ -117,6 +117,21 @@ components:
           format: uuid
         name:
           type: string
+    TxnReuqsutBody:
+      type: object
+      properties:
+        amount:
+          type: number
+        description:
+          type: string
+        receivers:
+          type: array
+          items:
+            type: string
+            format: uuid
+        payer:
+          type: string
+          format: uuid
     Txn:
       type: object
       properties:
