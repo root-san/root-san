@@ -6,7 +6,7 @@ info:
 servers:
   - url: http://localhost:8080
 paths:
-  /room:
+  /rooms:
     post:
       summary: create room
       requestBody:
@@ -21,7 +21,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Room'
-  /room/{roomId}:
+  /rooms/{roomId}:
     get:
       summary: get room
       parameters:
@@ -36,8 +36,8 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Room'
-  /room/{roomId}/member:
+                $ref: '#/components/schemas/RoomDetails'
+  /rooms/{roomId}/member:
     post:
       summary: add member to room
       parameters:
@@ -58,7 +58,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Member'
-  /room/{roomId}/txn:
+  /rooms/{roomId}/txn:
     post:
       summary: add txn to room
       parameters:
@@ -84,6 +84,15 @@ components:
     Room:
       type: object
       properties:
+        id:
+          type: string
+        name:
+          type: string
+    RoomDetails:
+      type: object
+      properties:
+        id:
+          type: string
         name:
           type: string
         members:
