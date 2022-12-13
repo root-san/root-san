@@ -1,0 +1,49 @@
+@startuml
+
+' hide the spot
+hide circle
+
+' avoid problems with angled crows feet
+skinparam linetype ortho
+
+title root-san
+
+package "root-san" as root_san {
+    entity "rooms" as rooms {
+        + id: char(36)
+        --
+        + name: varchar(300)
+        + created_at: timestamp
+    }
+
+    entity "room_members" as room_members {
+        + member_id: char(36)
+        + room_id: char(36)
+        --
+        + name: varchar(300)
+        + created_at: timestamp
+    }
+
+    entity "transactions" as transactions {
+        + id: char(36)
+        --
+        + room_id: char(36)
+        + amount: int
+        + payer_id: char(36)
+        + description: varchar(300)
+        + created_at: timestamp
+    }
+
+    entity "transaction_receivers" as transaction_receivers {
+        + member_id: char(36)
+        + transaction_id: char(36)
+        --
+        + created_at: timestamp
+    }
+}
+
+rooms ||--|{ room_members
+rooms ||--|{ transactions
+transactions ||--|{ transaction_receivers
+
+@enduml
