@@ -86,6 +86,7 @@ components:
       properties:
         id:
           type: string
+          format: uuid
         name:
           type: string
     RoomDetails:
@@ -93,6 +94,7 @@ components:
       properties:
         id:
           type: string
+          format: uuid
         name:
           type: string
         members:
@@ -110,11 +112,11 @@ components:
     Member:
       type: object
       properties:
-        name:
-          type: string
         id:
           type: string
           format: uuid
+        name:
+          type: string
     Txn:
       type: object
       properties:
