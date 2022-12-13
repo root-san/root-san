@@ -1,0 +1,137 @@
+openapi: 3.0.0
+info:
+  title: root-san API
+  version: 1.0.0
+  description: 割り勘アプリ
+servers:
+  - url: http://localhost:8080
+paths:
+  /room:
+    post:
+      summary: create room
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Room'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Room'
+  /room/{roomId}:
+    get:
+      summary: get room
+      parameters:
+        - name: roomId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Room'
+  /room/{roomId}/member:
+    post:
+      summary: add member to room
+      parameters:
+        - name: roomId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Member'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Member'
+  /room/{roomId}/txn:
+    post:
+      summary: add txn to room
+      parameters:
+        - name: roomId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Txn'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Txn'
+components:
+  schemas:
+    Room:
+      type: object
+      properties:
+        name:
+          type: string
+        members:
+          type: array
+          items:
+            $ref: '#/components/schemas/Member'
+        txns:
+          type: array
+          items:
+            $ref: '#/components/schemas/Txn'
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Result'
+    Member:
+      type: object
+      properties:
+        name:
+          type: string
+        id:
+          type: string
+          format: uuid
+    Txn:
+      type: object
+      properties:
+        createdAt:
+          type: string
+          format: date-time
+        amount:
+          type: number
+        description:
+          type: string
+        receivers:
+          type: array
+          items:
+            type: string
+            format: uuid
+        payer:
+          type: string
+          format: uuid
+    Result:
+      type: object
+      properties:
+        amount:
+          type: number
+        receiver:
+          type: string
+          format: uuid
+        payer:
+          type: string
+          format: uuid
