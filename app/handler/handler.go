@@ -16,11 +16,11 @@ type Server struct {
 func (s *Server) CreateRoom(ec echo.Context) error {
 	req := api.CreateRoomJSONRequestBody{}
 	if err := ec.Bind(&req); err != nil {
-		return err
+		return catch(ec, err)
 	}
 	args := parser.ParseCreateRoomJSONRequestBody(req)
 	if err := s.Repo.CreateRoom(args); err != nil {
-		return err
+		return catch(ec, err)
 	}
 	return ec.JSON(200, api.CreateRoomJSONBody{
 		Id: req.Id,
