@@ -13,14 +13,14 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/Room"
+              $ref: '#/components/schemas/Room'
       responses:
-        "200":
+        '200':
           description: OK
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Room"
+                $ref: '#/components/schemas/Room'
       operationId: createRoom
   /rooms/{roomId}:
     get:
@@ -32,12 +32,12 @@ paths:
           schema:
             type: string
       responses:
-        "200":
+        '200':
           description: OK
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/RoomDetails"
+                $ref: '#/components/schemas/RoomDetails'
       operationId: getRoom
   /rooms/{roomId}/member:
     post:
@@ -52,14 +52,14 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/Member"
+              $ref: '#/components/schemas/Member'
       responses:
-        "200":
+        '200':
           description: OK
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Member"
+                $ref: '#/components/schemas/Member'
       operationId: addMember
   /rooms/{roomId}/member/{memberId}:
     delete:
@@ -76,7 +76,7 @@ paths:
           schema:
             type: string
       responses:
-        "200":
+        '200':
           description: OK
       operationId: deleteMember
   /rooms/{roomId}/txn:
@@ -92,14 +92,14 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/TxnRequestBody"
+              $ref: '#/components/schemas/TxnRequestBody'
       responses:
-        "200":
+        '200':
           description: OK
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Txn"
+                $ref: '#/components/schemas/Txn'
       operationId: addTransaction
   /rooms/{roomId}/txn/{txnId}:
     put:
@@ -119,14 +119,14 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/TxnRequestBody"
+              $ref: '#/components/schemas/TxnRequestBody'
       responses:
-        "200":
+        '200':
           description: OK
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Txn"
+                $ref: '#/components/schemas/Txn'
       operationId: editTransaction
     delete:
       summary: delete txn from room
@@ -142,7 +142,7 @@ paths:
           schema:
             type: string
       responses:
-        "200":
+        '200':
           description: OK
       operationId: deleteTransaction
 components:
@@ -166,15 +166,15 @@ components:
         members:
           type: array
           items:
-            $ref: "#/components/schemas/Member"
+            $ref: '#/components/schemas/Member'
         txns:
           type: array
           items:
-            $ref: "#/components/schemas/Txn"
+            $ref: '#/components/schemas/Txn'
         results:
           type: array
           items:
-            $ref: "#/components/schemas/Result"
+            $ref: '#/components/schemas/Result'
         createdAt:
           type: string
           format: date-time
