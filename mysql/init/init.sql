@@ -22,7 +22,7 @@ CREATE TABLE IF NOT EXISTS `transactions` (
   `room_id` char(36) NOT NULL,
   `amount` int NOT NULL,
   `payer_id` char(36) NOT NULL,
-  `payed_at` datetime NOT NULL,
+  `paid_at` datetime NOT NULL,
   `description` varchar(300) NOT NULL,
   `created_at` timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL,
   `updated_at` timestamp DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP NOT NULL,
