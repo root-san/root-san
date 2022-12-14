@@ -1,8 +1,8 @@
 package parser
 
 import (
-	"github.com/root-san/root-san/gen/api"
 	"github.com/root-san/root-san/app/repository"
+	"github.com/root-san/root-san/gen/api"
 )
 
 // ParseCreateRoomJSONRequestBody parses the request body of the CreateRoom endpoint
