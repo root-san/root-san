@@ -21,6 +21,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Room'
+      operationId: createRoom
   /rooms/{roomId}:
     get:
       summary: get room
@@ -37,6 +38,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/RoomDetails'
+      operationId: getRoom
   /rooms/{roomId}/member:
     post:
       summary: add member to room
@@ -58,6 +60,25 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Member'
+      operationId: addMember
+  /rooms/{roomId}/member/{memberId}:
+    delete:
+      summary: delete member from room
+      parameters:
+        - name: roomId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: memberId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+      operationId: deleteMember
   /rooms/{roomId}/txn:
     post:
       summary: add txn to room
@@ -71,7 +92,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/TxnReuqsutBody'
+              $ref: '#/components/schemas/TxnRequestBody'
       responses:
         '200':
           description: OK
@@ -79,6 +100,51 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Txn'
+      operationId: addTransaction
+  /rooms/{roomId}/txn/{txnId}:
+    put:
+      summary: edit txn of room
+      parameters:
+        - name: roomId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: txnId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TxnRequestBody'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Txn'
+      operationId: editTransaction
+    delete:
+      summary: delete txn from room
+      parameters:
+        - name: roomId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: txnId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+      operationId: deleteTransaction
 components:
   schemas:
     Room:
@@ -109,6 +175,9 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Result'
+        createdAt:
+          type: string
+          format: date-time
     Member:
       type: object
       properties:
@@ -117,7 +186,7 @@ components:
           format: uuid
         name:
           type: string
-    TxnReuqsutBody:
+    TxnRequestBody:
       type: object
       properties:
         amount:
@@ -132,6 +201,12 @@ components:
         payer:
           type: string
           format: uuid
+        id:
+          type: string
+          format: uuid
+        paidAt:
+          type: string
+          format: date-time
     Txn:
       type: object
       properties:
@@ -150,6 +225,12 @@ components:
         payer:
           type: string
           format: uuid
+        id:
+          type: string
+          format: uuid
+        paidAt:
+          type: string
+          format: date-time
     Result:
       type: object
       properties:
