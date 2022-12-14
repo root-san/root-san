@@ -2,8 +2,8 @@
 
 ## Prerequisites
 
-Go: v1.18
-MySQL: 8.x
+- Go: v1.18
+- MySQL: 8.x
 
 ## set up
 
