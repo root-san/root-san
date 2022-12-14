@@ -34,11 +34,12 @@ type Room struct {
 
 // RoomDetails defines model for RoomDetails.
 type RoomDetails struct {
-	Id      *openapi_types.UUID `json:"id,omitempty"`
-	Members *[]Member           `json:"members,omitempty"`
-	Name    *string             `json:"name,omitempty"`
-	Results *[]Result           `json:"results,omitempty"`
-	Txns    *[]Txn              `json:"txns,omitempty"`
+	CreatedAt *time.Time          `json:"createdAt,omitempty"`
+	Id        *openapi_types.UUID `json:"id,omitempty"`
+	Members   *[]Member           `json:"members,omitempty"`
+	Name      *string             `json:"name,omitempty"`
+	Results   *[]Result           `json:"results,omitempty"`
+	Txns      *[]Txn              `json:"txns,omitempty"`
 }
 
 // Txn defines model for Txn.
@@ -46,50 +47,69 @@ type Txn struct {
 	Amount      *float32              `json:"amount,omitempty"`
 	CreatedAt   *time.Time            `json:"createdAt,omitempty"`
 	Description *string               `json:"description,omitempty"`
+	Id          *openapi_types.UUID   `json:"id,omitempty"`
+	PaidAt      *time.Time            `json:"paidAt,omitempty"`
 	Payer       *openapi_types.UUID   `json:"payer,omitempty"`
 	Receivers   *[]openapi_types.UUID `json:"receivers,omitempty"`
 }
 
-// TxnReuqsutBody defines model for TxnReuqsutBody.
-type TxnReuqsutBody struct {
+// TxnRequestBody defines model for TxnRequestBody.
+type TxnRequestBody struct {
 	Amount      *float32              `json:"amount,omitempty"`
 	Description *string               `json:"description,omitempty"`
+	Id          *openapi_types.UUID   `json:"id,omitempty"`
+	PaidAt      *time.Time            `json:"paidAt,omitempty"`
 	Payer       *openapi_types.UUID   `json:"payer,omitempty"`
 	Receivers   *[]openapi_types.UUID `json:"receivers,omitempty"`
 }
 
-// PostRoomsJSONBody defines parameters for PostRooms.
-type PostRoomsJSONBody = Room
+// CreateRoomJSONBody defines parameters for CreateRoom.
+type CreateRoomJSONBody = Room
 
-// PostRoomsRoomIdMemberJSONBody defines parameters for PostRoomsRoomIdMember.
-type PostRoomsRoomIdMemberJSONBody = Member
+// AddMemberJSONBody defines parameters for AddMember.
+type AddMemberJSONBody = Member
 
-// PostRoomsRoomIdTxnJSONBody defines parameters for PostRoomsRoomIdTxn.
-type PostRoomsRoomIdTxnJSONBody = TxnReuqsutBody
+// AddTransactionJSONBody defines parameters for AddTransaction.
+type AddTransactionJSONBody = TxnRequestBody
 
-// PostRoomsJSONRequestBody defines body for PostRooms for application/json ContentType.
-type PostRoomsJSONRequestBody = PostRoomsJSONBody
+// EditTransactionJSONBody defines parameters for EditTransaction.
+type EditTransactionJSONBody = TxnRequestBody
 
-// PostRoomsRoomIdMemberJSONRequestBody defines body for PostRoomsRoomIdMember for application/json ContentType.
-type PostRoomsRoomIdMemberJSONRequestBody = PostRoomsRoomIdMemberJSONBody
+// CreateRoomJSONRequestBody defines body for CreateRoom for application/json ContentType.
+type CreateRoomJSONRequestBody = CreateRoomJSONBody
 
-// PostRoomsRoomIdTxnJSONRequestBody defines body for PostRoomsRoomIdTxn for application/json ContentType.
-type PostRoomsRoomIdTxnJSONRequestBody = PostRoomsRoomIdTxnJSONBody
+// AddMemberJSONRequestBody defines body for AddMember for application/json ContentType.
+type AddMemberJSONRequestBody = AddMemberJSONBody
+
+// AddTransactionJSONRequestBody defines body for AddTransaction for application/json ContentType.
+type AddTransactionJSONRequestBody = AddTransactionJSONBody
+
+// EditTransactionJSONRequestBody defines body for EditTransaction for application/json ContentType.
+type EditTransactionJSONRequestBody = EditTransactionJSONBody
 
 // ServerInterface represents all server handlers.
 type ServerInterface interface {
 	// create room
 	// (POST /rooms)
-	PostRooms(ctx echo.Context) error
+	CreateRoom(ctx echo.Context) error
 	// get room
 	// (GET /rooms/{roomId})
-	GetRoomsRoomId(ctx echo.Context, roomId string) error
+	GetRoom(ctx echo.Context, roomId string) error
 	// add member to room
 	// (POST /rooms/{roomId}/member)
-	PostRoomsRoomIdMember(ctx echo.Context, roomId string) error
+	AddMember(ctx echo.Context, roomId string) error
+	// delete member from room
+	// (DELETE /rooms/{roomId}/member/{memberId})
+	DeleteMember(ctx echo.Context, roomId string, memberId string) error
 	// add txn to room
 	// (POST /rooms/{roomId}/txn)
-	PostRoomsRoomIdTxn(ctx echo.Context, roomId string) error
+	AddTransaction(ctx echo.Context, roomId string) error
+	// delete txn from room
+	// (DELETE /rooms/{roomId}/txn/{txnId})
+	DeleteTransaction(ctx echo.Context, roomId string, txnId string) error
+	// edit txn of room
+	// (PUT /rooms/{roomId}/txn/{txnId})
+	EditTransaction(ctx echo.Context, roomId string, txnId string) error
 }
 
 // ServerInterfaceWrapper converts echo contexts to parameters.
@@ -97,17 +117,17 @@ type ServerInterfaceWrapper struct {
 	Handler ServerInterface
 }
 
-// PostRooms converts echo context to params.
-func (w *ServerInterfaceWrapper) PostRooms(ctx echo.Context) error {
+// CreateRoom converts echo context to params.
+func (w *ServerInterfaceWrapper) CreateRoom(ctx echo.Context) error {
 	var err error
 
 	// Invoke the callback with all the unmarshalled arguments
-	err = w.Handler.PostRooms(ctx)
+	err = w.Handler.CreateRoom(ctx)
 	return err
 }
 
-// GetRoomsRoomId converts echo context to params.
-func (w *ServerInterfaceWrapper) GetRoomsRoomId(ctx echo.Context) error {
+// GetRoom converts echo context to params.
+func (w *ServerInterfaceWrapper) GetRoom(ctx echo.Context) error {
 	var err error
 	// ------------- Path parameter "roomId" -------------
 	var roomId string
@@ -118,12 +138,12 @@ func (w *ServerInterfaceWrapper) GetRoomsRoomId(ctx echo.Context) error {
 	}
 
 	// Invoke the callback with all the unmarshalled arguments
-	err = w.Handler.GetRoomsRoomId(ctx, roomId)
+	err = w.Handler.GetRoom(ctx, roomId)
 	return err
 }
 
-// PostRoomsRoomIdMember converts echo context to params.
-func (w *ServerInterfaceWrapper) PostRoomsRoomIdMember(ctx echo.Context) error {
+// AddMember converts echo context to params.
+func (w *ServerInterfaceWrapper) AddMember(ctx echo.Context) error {
 	var err error
 	// ------------- Path parameter "roomId" -------------
 	var roomId string
@@ -134,12 +154,36 @@ func (w *ServerInterfaceWrapper) PostRoomsRoomIdMember(ctx echo.Context) error {
 	}
 
 	// Invoke the callback with all the unmarshalled arguments
-	err = w.Handler.PostRoomsRoomIdMember(ctx, roomId)
+	err = w.Handler.AddMember(ctx, roomId)
 	return err
 }
 
-// PostRoomsRoomIdTxn converts echo context to params.
-func (w *ServerInterfaceWrapper) PostRoomsRoomIdTxn(ctx echo.Context) error {
+// DeleteMember converts echo context to params.
+func (w *ServerInterfaceWrapper) DeleteMember(ctx echo.Context) error {
+	var err error
+	// ------------- Path parameter "roomId" -------------
+	var roomId string
+
+	err = runtime.BindStyledParameterWithLocation("simple", false, "roomId", runtime.ParamLocationPath, ctx.Param("roomId"), &roomId)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter roomId: %s", err))
+	}
+
+	// ------------- Path parameter "memberId" -------------
+	var memberId string
+
+	err = runtime.BindStyledParameterWithLocation("simple", false, "memberId", runtime.ParamLocationPath, ctx.Param("memberId"), &memberId)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter memberId: %s", err))
+	}
+
+	// Invoke the callback with all the unmarshalled arguments
+	err = w.Handler.DeleteMember(ctx, roomId, memberId)
+	return err
+}
+
+// AddTransaction converts echo context to params.
+func (w *ServerInterfaceWrapper) AddTransaction(ctx echo.Context) error {
 	var err error
 	// ------------- Path parameter "roomId" -------------
 	var roomId string
@@ -150,7 +194,55 @@ func (w *ServerInterfaceWrapper) PostRoomsRoomIdTxn(ctx echo.Context) error {
 	}
 
 	// Invoke the callback with all the unmarshalled arguments
-	err = w.Handler.PostRoomsRoomIdTxn(ctx, roomId)
+	err = w.Handler.AddTransaction(ctx, roomId)
+	return err
+}
+
+// DeleteTransaction converts echo context to params.
+func (w *ServerInterfaceWrapper) DeleteTransaction(ctx echo.Context) error {
+	var err error
+	// ------------- Path parameter "roomId" -------------
+	var roomId string
+
+	err = runtime.BindStyledParameterWithLocation("simple", false, "roomId", runtime.ParamLocationPath, ctx.Param("roomId"), &roomId)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter roomId: %s", err))
+	}
+
+	// ------------- Path parameter "txnId" -------------
+	var txnId string
+
+	err = runtime.BindStyledParameterWithLocation("simple", false, "txnId", runtime.ParamLocationPath, ctx.Param("txnId"), &txnId)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter txnId: %s", err))
+	}
+
+	// Invoke the callback with all the unmarshalled arguments
+	err = w.Handler.DeleteTransaction(ctx, roomId, txnId)
+	return err
+}
+
+// EditTransaction converts echo context to params.
+func (w *ServerInterfaceWrapper) EditTransaction(ctx echo.Context) error {
+	var err error
+	// ------------- Path parameter "roomId" -------------
+	var roomId string
+
+	err = runtime.BindStyledParameterWithLocation("simple", false, "roomId", runtime.ParamLocationPath, ctx.Param("roomId"), &roomId)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter roomId: %s", err))
+	}
+
+	// ------------- Path parameter "txnId" -------------
+	var txnId string
+
+	err = runtime.BindStyledParameterWithLocation("simple", false, "txnId", runtime.ParamLocationPath, ctx.Param("txnId"), &txnId)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter txnId: %s", err))
+	}
+
+	// Invoke the callback with all the unmarshalled arguments
+	err = w.Handler.EditTransaction(ctx, roomId, txnId)
 	return err
 }
 
@@ -182,9 +274,12 @@ func RegisterHandlersWithBaseURL(router EchoRouter, si ServerInterface, baseURL 
 		Handler: si,
 	}
 
-	router.POST(baseURL+"/rooms", wrapper.PostRooms)
-	router.GET(baseURL+"/rooms/:roomId", wrapper.GetRoomsRoomId)
-	router.POST(baseURL+"/rooms/:roomId/member", wrapper.PostRoomsRoomIdMember)
-	router.POST(baseURL+"/rooms/:roomId/txn", wrapper.PostRoomsRoomIdTxn)
+	router.POST(baseURL+"/rooms", wrapper.CreateRoom)
+	router.GET(baseURL+"/rooms/:roomId", wrapper.GetRoom)
+	router.POST(baseURL+"/rooms/:roomId/member", wrapper.AddMember)
+	router.DELETE(baseURL+"/rooms/:roomId/member/:memberId", wrapper.DeleteMember)
+	router.POST(baseURL+"/rooms/:roomId/txn", wrapper.AddTransaction)
+	router.DELETE(baseURL+"/rooms/:roomId/txn/:txnId", wrapper.DeleteTransaction)
+	router.PUT(baseURL+"/rooms/:roomId/txn/:txnId", wrapper.EditTransaction)
 
 }
