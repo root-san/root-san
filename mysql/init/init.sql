@@ -14,7 +14,7 @@ CREATE TABLE IF NOT EXISTS `room_members` (
   `room_id` char(36) NOT NULL,
   `name` varchar(300) NOT NULL,
   `created_at` datetime default current_timestamp,
-  PRIMARY KEY (`id`, `room_id`)
+  PRIMARY KEY (`member_id`, `room_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 CREATE TABLE IF NOT EXISTS `transactions` (
@@ -34,6 +34,6 @@ CREATE TABLE IF NOT EXISTS `transaction_receivers` (
     `member_id` char(36) NOT NULL,
     `transaction_id` char(36) NOT NULL,
     `created_at` datetime default current_timestamp,
-    PRIMARY KEY (`id`),
+    PRIMARY KEY (`member_id`, `transaction_id`),
     FOREIGN KEY (`transaction_id`) REFERENCES `transactions`(`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
