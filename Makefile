@@ -18,7 +18,7 @@ build:
 # run with live reload
 .PHONY: dev
 dev:
-	@go run github.com/cosmtrek/air@latest -c ./.air.toml
+	docker compose up
 
 .PHONY: lint
 lint:
