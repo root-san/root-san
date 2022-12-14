@@ -19,6 +19,8 @@ services:
     image: mysql:8.0.29
     container_name: db
     environment:
+      MYSQL_USER: root
+      MYSQL_PASSWORD: password
       MYSQL_ROOT_PASSWORD: password
       MYSQL_DATABASE: root_san
     command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_general_ci
