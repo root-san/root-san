@@ -1,6 +1,7 @@
 # root-san
 
 ## Prerequisites
+
 Go: v1.18
 MySQL: 8.x
 
