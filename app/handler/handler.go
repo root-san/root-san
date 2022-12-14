@@ -3,7 +3,8 @@ package handler
 import (
 	"github.com/labstack/echo/v4"
 	"github.com/root-san/root-san/app/repository"
-	// "github.com/root-san/root-san/gen/api"
+	"github.com/root-san/root-san/gen/api"
+	"github.com/root-san/root-san/app/handler/parser"
 )
 
 type Server struct {
@@ -13,6 +14,14 @@ type Server struct {
 // create room
 // (POST /rooms)
 func (s *Server) CreateRoom(c echo.Context) error {
+	req := api.CreateRoomJSONRequestBody{}
+	if err := c.Bind(&req); err != nil {
+		return err
+	}
+	args := parser.ParseCreateRoomJSONRequestBody(req)
+	if err := s.Repo.CreateRoom(args); err != nil {
+		return err
+	}
 	return nil
 }
 

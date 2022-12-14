@@ -1,3 +1,5 @@
 package repository
 
-type Repository interface {}
+type Repository interface {
+	RoomRepository
+}
