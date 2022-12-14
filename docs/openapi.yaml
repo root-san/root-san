@@ -21,6 +21,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Room'
+      operationId: createRoom
   /rooms/{roomId}:
     get:
       summary: get room
@@ -37,6 +38,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/RoomDetails'
+      operationId: getRoom
   /rooms/{roomId}/member:
     post:
       summary: add member to room
@@ -58,6 +60,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Member'
+      operationId: addMember
   /rooms/{roomId}/txn:
     post:
       summary: add txn to room
@@ -79,6 +82,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Txn'
+      operationId: addTransaction
 components:
   schemas:
     Room:
