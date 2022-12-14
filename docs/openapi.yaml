@@ -76,8 +76,8 @@ paths:
           schema:
             type: string
       responses:
-        '200':
-          description: OK
+        '204':
+          description: No content
       operationId: deleteMember
   /rooms/{roomId}/txn:
     post:
@@ -142,8 +142,8 @@ paths:
           schema:
             type: string
       responses:
-        '200':
-          description: OK
+        '204':
+          description: No content
       operationId: deleteTransaction
 components:
   schemas:
