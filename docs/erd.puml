@@ -30,8 +30,10 @@ package "root-san" as root_san {
         + room_id: char(36)
         + amount: int
         + payer_id: char(36)
+        + payed_at: datetime
         + description: varchar(300)
         + created_at: timestamp
+        + updated_at: timestamp
     }
 
     entity "transaction_receivers" as transaction_receivers {
