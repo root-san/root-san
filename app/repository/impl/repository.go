@@ -1,8 +1,8 @@
 package impl
 
 import (
-	"github.com/jmoiron/sqlx"
 	_ "github.com/go-sql-driver/mysql" // import driver
+	"github.com/jmoiron/sqlx"
 	"github.com/root-san/root-san/app/repository"
 )
 

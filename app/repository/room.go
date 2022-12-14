@@ -1,6 +1,5 @@
 package repository
 
-
 type RoomRepository interface {
 	// CreateRoom
 	CreateRoom(args *RoomArgs) error

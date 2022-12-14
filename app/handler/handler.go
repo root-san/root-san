@@ -2,9 +2,9 @@ package handler
 
 import (
 	"github.com/labstack/echo/v4"
+	"github.com/root-san/root-san/app/handler/parser"
 	"github.com/root-san/root-san/app/repository"
 	"github.com/root-san/root-san/gen/api"
-	"github.com/root-san/root-san/app/handler/parser"
 )
 
 type Server struct {
@@ -23,7 +23,7 @@ func (s *Server) CreateRoom(ec echo.Context) error {
 		return catch(ec, err)
 	}
 	return ec.JSON(200, api.CreateRoomJSONBody{
-		Id: req.Id,
+		Id:   req.Id,
 		Name: req.Name,
 	})
 }
