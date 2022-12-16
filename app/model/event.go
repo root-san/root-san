@@ -8,7 +8,7 @@ type Event struct {
 	Id        uuid.UUID
 	Name      string
 	Amount    int
-	eventType EventType
+	EventType EventType
 	txns      []*Transaction
 }
 
