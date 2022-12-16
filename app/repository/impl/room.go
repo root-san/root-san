@@ -59,5 +59,39 @@ type Member struct {
 }
 
 func (r *Repository) GetRoomEvents(roomId uuid.UUID) ([]*model.Event, error) {
-	return nil, nil
+	var events []*event
+	err := r.db.Select(&events, "SELECT * FROM events WHERE room_id = ?", roomId)
+	if err != nil {
+		return nil, err
+	}
+	var txns []*model.Transaction
+	// 各イベントに紐づくtransactionを取得
+	for _, e := range events {
+		var t []*transaction
+		err = r.db.Select(&t, "SELECT * FROM transactions WHERE event_id = ?", e.id)
+		if err != nil {
+			return nil, err
+		}
+		for _, txn := range t {
+			txns = append(txns, &model.Transaction{
+				Id:       txn.id,
+				Amount:   txn.amount,
+				Payer:    txn.payer,
+				Receiver: txn.receiver,
+			})
+		}
+	}
+	var res []*model.Event
+	for _, e := range events {
+		res = append(res, &model.Event{
+			Id:        e.id,
+			Name:      e.name,
+			Amount:    e.amount,
+			EventType: model.EventType(e.eventType),
+			EventAt:   e.eventAt,
+			Txns:      txns,
+			CreatedAt: e.createdAt,
+		})
+	}
+	return res, nil
 }
