@@ -58,7 +58,7 @@ type Member struct {
 
 // Result defines model for Result.
 type Result struct {
-	Amount   float32            `json:"amount"`
+	Amount   int                `json:"amount"`
 	Payer    openapi_types.UUID `json:"payer"`
 	Receiver openapi_types.UUID `json:"receiver"`
 }
@@ -81,7 +81,7 @@ type RoomDetails struct {
 
 // Txn defines model for Txn.
 type Txn struct {
-	Amount   float32            `json:"amount"`
+	Amount   int                `json:"amount"`
 	Id       openapi_types.UUID `json:"id"`
 	Payer    openapi_types.UUID `json:"payer"`
 	Receiver openapi_types.UUID `json:"receiver"`
