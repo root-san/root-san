@@ -20,7 +20,7 @@ type EventRepository interface {
 
 type CreateEventArgs struct {
 	Id        uuid.UUID
-	RoomID    uuid.UUID
+	RoomId    uuid.UUID
 	Name      string
 	Amount    int
 	EventType string
