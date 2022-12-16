@@ -1,6 +1,7 @@
 package impl
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/google/uuid"
@@ -15,65 +16,78 @@ func (r *Repository) CreateEvent(args *repository.CreateEventArgs) error {
 		return err
 	}
 	// イベントを作成
-	_, err = tx.Exec("INSERT INTO events (id, room_id, name, amount, event_type, event_at) VALUES (?, ?, ?, ?, ?)", args.Id, args.RoomId, args.Name, args.Amount, args.EventType, args.EventAt)
+	_, err = tx.Exec("INSERT INTO events (id, room_id, name, amount, event_type, event_at) VALUES (?, ?, ?, ?, ?, ?)", args.Id, args.RoomId, args.Name, args.Amount, args.EventType, args.EventAt)
 	if err != nil {
 		return err
 	}
 	// bulk insert
-	_, err = tx.Exec("INSERT INTO transactions (id, amount, payer, receiver) VALUES (?, ?, ?, ?)", args.Txns)
-	if err != nil {
-		return err
+	for _, txn := range args.Txns {
+		_, err = tx.Exec("INSERT INTO transactions (id, event_id, amount, payer_id, receiver_id) VALUES (?, ?, ?, ?, ?)", txn.Id, args.Id, txn.Amount, txn.Payer, txn.Receiver)
+		if err != nil {
+			return err
+		}
 	}
 	return tx.Commit()
 }
 
 func (r *Repository) GetEvent(eventId uuid.UUID) (*model.Event, error) {
-	var eve event
+	eve := &event{}
+	fmt.Println("yaa")
 	err := r.db.Get(eve, "SELECT * FROM events WHERE id = ?", eventId)
 	if err != nil {
 		return nil, err
 	}
+	fmt.Println("koko")
 	// eventIdを元にtransactionを取得
-	var txns []*transaction
-	err = r.db.Select(&txns, "SELECT * FROM transactions WHERE event_id = ?", eventId)
+	var txns []*model.Transaction
+	rows, err := r.db.Queryx("SELECT * FROM transactions WHERE event_id = ?", eventId)
 	if err != nil {
 		return nil, err
 	}
-	res := &model.Event{
-		Id:        eve.id,
-		Name:      eve.name,
-		Amount:    eve.amount,
-		EventType: model.EventType(eve.eventType),
-		EventAt:   eve.eventAt,
-		Txns:      make([]*model.Transaction, len(txns)),
-		CreatedAt: eve.createdAt,
-	}
-	for i, txn := range txns {
-		res.Txns[i] = &model.Transaction{
-			Id:       txn.id,
-			Amount:   txn.amount,
-			Payer:    txn.payer,
-			Receiver: txn.receiver,
+	fmt.Println("rows:")
+	for rows.Next() {
+		var txn transaction
+		if err := rows.StructScan(&txn); err != nil {
+			return nil, err
 		}
+		txns = append(txns, &model.Transaction{
+			Id:       txn.Id,
+			Amount:   txn.Amount,
+			Payer:    txn.Payer,
+			Receiver: txn.Receiver,
+		})
+	}
+	res := &model.Event{
+		Id:        eve.Id,
+		Name:      eve.Name,
+		Amount:    eve.Amount,
+		EventType: model.EventType(eve.EventType),
+		EventAt:   eve.EventAt,
+		Txns:      txns,
+		CreatedAt: eve.CreatedAt,
 	}
 	return res, nil
 }
 
 type event struct {
-	id        uuid.UUID `db:"id"`
-	roomId    uuid.UUID `db:"room_id"`
-	name      string    `db:"name"`
-	amount    int       `db:"amount"`
-	eventType string    `db:"event_type"`
-	eventAt   time.Time `db:"event_at"`
-	createdAt time.Time `db:"created_at"`
+	Id        uuid.UUID `db:"id"`
+	RoomId    uuid.UUID `db:"room_id"`
+	Name      string    `db:"name"`
+	Amount    int       `db:"amount"`
+	EventType string    `db:"event_type"`
+	EventAt   time.Time `db:"event_at"`
+	CreatedAt time.Time `db:"created_at"`
+	UpdatedAt time.Time `db:"updated_at"`
 }
 
 type transaction struct {
-	id       uuid.UUID `db:"id"`
-	amount   int       `db:"amount"`
-	payer    uuid.UUID `db:"payer"`
-	receiver uuid.UUID `db:"receiver"`
+	Id        uuid.UUID `db:"id"`
+	EventId   uuid.UUID `db:"event_id"`
+	Amount    int       `db:"amount"`
+	Payer     uuid.UUID `db:"payer_id"`
+	Receiver  uuid.UUID `db:"receiver_id"`
+	CreatedAt time.Time `db:"created_at"`
+	UpdatedAt time.Time `db:"updated_at"`
 }
 
 func (r *Repository) UpdateEvent(args *repository.UpdateEventArgs) error {

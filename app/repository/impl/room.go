@@ -36,62 +36,76 @@ type Room struct {
 }
 
 func (r *Repository) GetRoomMembers(roomId uuid.UUID) ([]*model.Member, error) {
-	var members []*Member
-	err := r.db.Select(&members, "SELECT * FROM room_members WHERE room_id = ?", roomId)
+	rows, err := r.db.Queryx("SELECT * FROM room_members WHERE room_id = ?", roomId)
 	if err != nil {
 		return nil, err
 	}
 	var res []*model.Member
-	for _, m := range members {
+	for rows.Next() {
+		var m Member
+		err := rows.StructScan(&m)
+		if err != nil {
+			return nil, err
+		}
 		res = append(res, &model.Member{
-			Id:   m.id,
-			Name: m.name,
+			Id:   m.Id,
+			Name: m.Name,
 		})
 	}
 	return res, nil
 }
 
 type Member struct {
-	id        uuid.UUID `db:"id"`
-	roomId    uuid.UUID `db:"room_id"`
-	name      string    `db:"name"`
-	createdAt time.Time `db:"created_at"`
+	Id        uuid.UUID `db:"id"`
+	RoomId    uuid.UUID `db:"room_id"`
+	Name      string    `db:"name"`
+	CreatedAt time.Time `db:"created_at"`
 }
 
 func (r *Repository) GetRoomEvents(roomId uuid.UUID) ([]*model.Event, error) {
-	var events []*event
-	err := r.db.Select(&events, "SELECT * FROM events WHERE room_id = ?", roomId)
+	rows, err := r.db.Queryx("SELECT * FROM events WHERE room_id = ?", roomId)
 	if err != nil {
 		return nil, err
 	}
-	var txns []*model.Transaction
-	// 各イベントに紐づくtransactionを取得
-	for _, e := range events {
-		var t []*transaction
-		err = r.db.Select(&t, "SELECT * FROM transactions WHERE event_id = ?", e.id)
+	var events []*model.Event
+	for rows.Next() {
+		var e event
+		err := rows.StructScan(&e)
 		if err != nil {
 			return nil, err
 		}
-		for _, txn := range t {
-			txns = append(txns, &model.Transaction{
-				Id:       txn.id,
-				Amount:   txn.amount,
-				Payer:    txn.payer,
-				Receiver: txn.receiver,
-			})
-		}
-	}
-	var res []*model.Event
-	for _, e := range events {
-		res = append(res, &model.Event{
-			Id:        e.id,
-			Name:      e.name,
-			Amount:    e.amount,
-			EventType: model.EventType(e.eventType),
-			EventAt:   e.eventAt,
-			Txns:      txns,
-			CreatedAt: e.createdAt,
+		events = append(events, &model.Event{
+			Id:        e.Id,
+			Name:      e.Name,
+			Amount:    e.Amount,
+			EventType: model.EventType(e.EventType),
+			EventAt:   e.EventAt,
+			Txns:      []*model.Transaction{},
+			CreatedAt: e.CreatedAt,
 		})
 	}
-	return res, nil
+
+	for _, e := range events {
+		var txns []*model.Transaction
+		rows, err := r.db.Queryx("SELECT * FROM transactions WHERE event_id = ?", e.Id)
+		if err != nil {
+			return nil, err
+		}
+		for rows.Next() {
+			var txn transaction
+			err := rows.StructScan(&txn)
+			if err != nil {
+				return nil, err
+			}
+			txns = append(txns, &model.Transaction{
+				Id:       txn.Id,
+				Amount:   txn.Amount,
+				Payer:    txn.Payer,
+				Receiver: txn.Receiver,
+			})
+		}
+		e.Txns = txns
+	}
+
+	return events, nil
 }

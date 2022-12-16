@@ -30,10 +30,10 @@ type CreateEventArgs struct {
 }
 
 type Transaction struct {
-	Id       uuid.UUID `db:"id"`
-	Amount   int       `db:"amount"`
-	Payer    uuid.UUID `db:"payer"`
-	Receiver uuid.UUID `db:"receiver"`
+	Id       uuid.UUID
+	Amount   int
+	Payer    uuid.UUID
+	Receiver uuid.UUID
 }
 
 type UpdateEventArgs struct {
