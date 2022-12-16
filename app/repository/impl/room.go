@@ -36,7 +36,26 @@ type Room struct {
 }
 
 func (r *Repository) GetRoomMembers(roomId uuid.UUID) ([]*model.Member, error) {
-	return nil, nil
+	var members []*Member
+	err := r.db.Select(&members, "SELECT * FROM room_members WHERE room_id = ?", roomId)
+	if err != nil {
+		return nil, err
+	}
+	var res []*model.Member
+	for _, m := range members {
+		res = append(res, &model.Member{
+			Id:   m.id,
+			Name: m.name,
+		})
+	}
+	return res, nil
+}
+
+type Member struct {
+	id        uuid.UUID `db:"id"`
+	roomId    uuid.UUID `db:"room_id"`
+	name      string    `db:"name"`
+	createdAt time.Time `db:"created_at"`
 }
 
 func (r *Repository) GetRoomEvents(roomId uuid.UUID) ([]*model.Event, error) {
