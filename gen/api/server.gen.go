@@ -121,22 +121,22 @@ type ServerInterface interface {
 	CreateRoom(ctx echo.Context) error
 	// get room
 	// (GET /rooms/{roomId})
-	GetRoom(ctx echo.Context, roomId string) error
+	GetRoom(ctx echo.Context, roomId openapi_types.UUID) error
 	// add event to room
 	// (POST /rooms/{roomId}/event)
-	AddEvent(ctx echo.Context, roomId string) error
+	AddEvent(ctx echo.Context, roomId openapi_types.UUID) error
 	// delete event from room
 	// (DELETE /rooms/{roomId}/event/{eventId})
-	DeleteEvent(ctx echo.Context, roomId string, eventId string) error
+	DeleteEvent(ctx echo.Context, roomId openapi_types.UUID, eventId openapi_types.UUID) error
 	// edit event of room
 	// (PUT /rooms/{roomId}/event/{eventId})
-	EditEvent(ctx echo.Context, roomId string, eventId string) error
+	EditEvent(ctx echo.Context, roomId openapi_types.UUID, eventId openapi_types.UUID) error
 	// add member to room
 	// (POST /rooms/{roomId}/member)
-	AddMember(ctx echo.Context, roomId string) error
+	AddMember(ctx echo.Context, roomId openapi_types.UUID) error
 	// delete member from room
 	// (DELETE /rooms/{roomId}/member/{memberId})
-	DeleteMember(ctx echo.Context, roomId string, memberId string) error
+	DeleteMember(ctx echo.Context, roomId openapi_types.UUID, memberId openapi_types.UUID) error
 }
 
 // ServerInterfaceWrapper converts echo contexts to parameters.
@@ -157,7 +157,7 @@ func (w *ServerInterfaceWrapper) CreateRoom(ctx echo.Context) error {
 func (w *ServerInterfaceWrapper) GetRoom(ctx echo.Context) error {
 	var err error
 	// ------------- Path parameter "roomId" -------------
-	var roomId string
+	var roomId openapi_types.UUID
 
 	err = runtime.BindStyledParameterWithLocation("simple", false, "roomId", runtime.ParamLocationPath, ctx.Param("roomId"), &roomId)
 	if err != nil {
@@ -173,7 +173,7 @@ func (w *ServerInterfaceWrapper) GetRoom(ctx echo.Context) error {
 func (w *ServerInterfaceWrapper) AddEvent(ctx echo.Context) error {
 	var err error
 	// ------------- Path parameter "roomId" -------------
-	var roomId string
+	var roomId openapi_types.UUID
 
 	err = runtime.BindStyledParameterWithLocation("simple", false, "roomId", runtime.ParamLocationPath, ctx.Param("roomId"), &roomId)
 	if err != nil {
@@ -189,7 +189,7 @@ func (w *ServerInterfaceWrapper) AddEvent(ctx echo.Context) error {
 func (w *ServerInterfaceWrapper) DeleteEvent(ctx echo.Context) error {
 	var err error
 	// ------------- Path parameter "roomId" -------------
-	var roomId string
+	var roomId openapi_types.UUID
 
 	err = runtime.BindStyledParameterWithLocation("simple", false, "roomId", runtime.ParamLocationPath, ctx.Param("roomId"), &roomId)
 	if err != nil {
@@ -197,7 +197,7 @@ func (w *ServerInterfaceWrapper) DeleteEvent(ctx echo.Context) error {
 	}
 
 	// ------------- Path parameter "eventId" -------------
-	var eventId string
+	var eventId openapi_types.UUID
 
 	err = runtime.BindStyledParameterWithLocation("simple", false, "eventId", runtime.ParamLocationPath, ctx.Param("eventId"), &eventId)
 	if err != nil {
@@ -213,7 +213,7 @@ func (w *ServerInterfaceWrapper) DeleteEvent(ctx echo.Context) error {
 func (w *ServerInterfaceWrapper) EditEvent(ctx echo.Context) error {
 	var err error
 	// ------------- Path parameter "roomId" -------------
-	var roomId string
+	var roomId openapi_types.UUID
 
 	err = runtime.BindStyledParameterWithLocation("simple", false, "roomId", runtime.ParamLocationPath, ctx.Param("roomId"), &roomId)
 	if err != nil {
@@ -221,7 +221,7 @@ func (w *ServerInterfaceWrapper) EditEvent(ctx echo.Context) error {
 	}
 
 	// ------------- Path parameter "eventId" -------------
-	var eventId string
+	var eventId openapi_types.UUID
 
 	err = runtime.BindStyledParameterWithLocation("simple", false, "eventId", runtime.ParamLocationPath, ctx.Param("eventId"), &eventId)
 	if err != nil {
@@ -237,7 +237,7 @@ func (w *ServerInterfaceWrapper) EditEvent(ctx echo.Context) error {
 func (w *ServerInterfaceWrapper) AddMember(ctx echo.Context) error {
 	var err error
 	// ------------- Path parameter "roomId" -------------
-	var roomId string
+	var roomId openapi_types.UUID
 
 	err = runtime.BindStyledParameterWithLocation("simple", false, "roomId", runtime.ParamLocationPath, ctx.Param("roomId"), &roomId)
 	if err != nil {
@@ -253,7 +253,7 @@ func (w *ServerInterfaceWrapper) AddMember(ctx echo.Context) error {
 func (w *ServerInterfaceWrapper) DeleteMember(ctx echo.Context) error {
 	var err error
 	// ------------- Path parameter "roomId" -------------
-	var roomId string
+	var roomId openapi_types.UUID
 
 	err = runtime.BindStyledParameterWithLocation("simple", false, "roomId", runtime.ParamLocationPath, ctx.Param("roomId"), &roomId)
 	if err != nil {
@@ -261,7 +261,7 @@ func (w *ServerInterfaceWrapper) DeleteMember(ctx echo.Context) error {
 	}
 
 	// ------------- Path parameter "memberId" -------------
-	var memberId string
+	var memberId openapi_types.UUID
 
 	err = runtime.BindStyledParameterWithLocation("simple", false, "memberId", runtime.ParamLocationPath, ctx.Param("memberId"), &memberId)
 	if err != nil {
