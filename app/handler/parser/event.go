@@ -51,3 +51,24 @@ func (m Model) Event(e *model.Event) *api.Event {
 	}
 	return res
 }
+
+func ParseEditEventJSONRequestBody(body api.EditEventJSONRequestBody, roomId uuid.UUID) *repository.UpdateEventArgs {
+	args := repository.UpdateEventArgs{
+		Id:        body.Id,
+		RoomId:    roomId,
+		Name:      body.Name,
+		Amount:    body.Amount,
+		EventType: string(body.EventType),
+		EventAt:   body.EventAt,
+		Txns:      make([]*repository.Transaction, len(body.Txns)),
+	}
+	for i, txn := range body.Txns {
+		args.Txns[i] = &repository.Transaction{
+			Id:       txn.Id,
+			Amount:   txn.Amount,
+			Payer:    txn.Payer,
+			Receiver: txn.Receiver,
+		}
+	}
+	return &args
+}

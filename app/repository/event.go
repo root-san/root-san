@@ -38,6 +38,7 @@ type Transaction struct {
 
 type UpdateEventArgs struct {
 	Id        uuid.UUID
+	RoomId    uuid.UUID
 	Name      string
 	Amount    int
 	EventType string
