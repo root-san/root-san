@@ -22,16 +22,16 @@ type CreateEventArgs struct {
 	Name      string
 	Amount    int
 	EventType string
-	eventAt   time.Time
+	EventAt   time.Time
 
 	Txns []*Transaction
 }
 
 type Transaction struct {
-	Id       string
-	Amount   int
-	Payer    string
-	Receiver string
+	Id       string `db:"id"`
+	Amount   int   `db:"amount"`
+	Payer    string `db:"payer"`
+	Receiver string `db:"receiver"`
 }
 
 type UpdateEventArgs struct {

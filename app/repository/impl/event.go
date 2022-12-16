@@ -6,7 +6,23 @@ import (
 )
 
 func (r *Repository) CreateEvent(args *repository.CreateEventArgs) error {
-	return nil
+	// 複数テーブルを更新するのでトランザクションを行う
+	tx, err := r.db.Begin()
+	defer tx.Rollback()
+	if err != nil {
+		return err
+	}
+	// イベントを作成
+	_, err = tx.Exec("INSERT INTO events (id, name, amount, event_type, event_at) VALUES (?, ?, ?, ?, ?)", args.Id, args.Name, args.Amount, args.EventType, args.EventAt)
+	if err != nil {
+		return err
+	}
+	// bulk insert
+	_, err = tx.Exec("INSERT INTO transactions (id, amount, payer, receiver) VALUES (?, ?, ?, ?)", args.Txns)
+	if err != nil {
+		return err
+	}
+	return tx.Commit()
 }
 
 func (r *Repository) GetEvent(eventId string) (*model.Event, error) {
