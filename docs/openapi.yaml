@@ -185,7 +185,7 @@ components:
         - id
         - name
         - members
-        - txns
+        - events
         - results
         - createdAt
     Member:
