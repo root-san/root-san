@@ -40,7 +40,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/RoomDetails'
       operationId: getRoom
-  /rooms/{roomId}/member:
+  /rooms/{roomId}/members:
     post:
       summary: add member to room
       parameters:
@@ -63,7 +63,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Member'
       operationId: addMember
-  /rooms/{roomId}/member/{memberId}:
+  /rooms/{roomId}/members/{memberId}:
     delete:
       summary: delete member from room
       parameters:
@@ -83,7 +83,7 @@ paths:
         '204':
           description: No content
       operationId: deleteMember
-  /rooms/{roomId}/event:
+  /rooms/{roomId}/events:
     post:
       summary: add event to room
       parameters:
@@ -106,7 +106,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Event'
       operationId: addEvent
-  /rooms/{roomId}/event/{eventId}:
+  /rooms/{roomId}/events/{eventId}:
     put:
       summary: edit event of room
       parameters:
