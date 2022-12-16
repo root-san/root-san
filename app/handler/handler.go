@@ -6,6 +6,7 @@ import (
 	openapi_types "github.com/deepmap/oapi-codegen/pkg/types"
 	"github.com/labstack/echo/v4"
 	"github.com/root-san/root-san/app/handler/parser"
+	"github.com/root-san/root-san/app/model"
 	"github.com/root-san/root-san/app/repository"
 	"github.com/root-san/root-san/gen/api"
 )
@@ -34,7 +35,20 @@ func (s *Server) CreateRoom(ec echo.Context) error {
 // get room
 // (GET /rooms/{roomId})
 func (s *Server) GetRoom(ec echo.Context, roomId openapi_types.UUID) error {
-	return nil
+	room, err := s.Repo.GetRoom(roomId)
+	if err != nil {
+		return catch(ec, err)
+	}
+	members, err := s.Repo.GetRoomMembers(roomId)
+	if err != nil {
+		return catch(ec, err)
+	}
+	events, err := s.Repo.GetRoomEvents(roomId)
+	if err != nil {
+		return catch(ec, err)
+	}
+	r := model.NewRoomDetails(room, members, events)
+	return ec.JSON(http.StatusOK, parser.Model{}.RoomDetail(r))
 }
 
 // add member to room
