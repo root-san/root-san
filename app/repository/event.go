@@ -31,7 +31,7 @@ type Transaction struct {
 	Id       string
 	Amount   int
 	Payer    string
-	Received string
+	Receiver string
 }
 
 type UpdateEventArgs struct {
