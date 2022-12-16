@@ -13,6 +13,7 @@ type Event struct {
 	EventType EventType
 	EventAt   time.Time
 	Txns      []*Transaction
+	CreatedAt time.Time
 }
 
 type EventType string
