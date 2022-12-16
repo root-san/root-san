@@ -30,6 +30,7 @@ package "root-san" as root_san {
         + room_id: char(36) <<FK>>
         + amount: int
         + name: varchar(300)
+        + event_type: varchar(300)
         + event_at: datetime
         + created_at: timestamp
         + updated_at: timestamp
@@ -42,7 +43,6 @@ package "root-san" as root_san {
         + amount: int
         + payer_id: char(36)
         + receiver_id: char(36)
-        + description: varchar(300)
         + created_at: timestamp
         + updated_at: timestamp
     }
