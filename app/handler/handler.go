@@ -1,11 +1,12 @@
 package handler
 
 import (
-	"log"
 	"net/http"
 
+	openapi_types "github.com/deepmap/oapi-codegen/pkg/types"
 	"github.com/labstack/echo/v4"
 	"github.com/root-san/root-san/app/handler/parser"
+	"github.com/root-san/root-san/app/model"
 	"github.com/root-san/root-san/app/repository"
 	"github.com/root-san/root-san/gen/api"
 )
@@ -33,40 +34,32 @@ func (s *Server) CreateRoom(ec echo.Context) error {
 
 // get room
 // (GET /rooms/{roomId})
-func (s *Server) GetRoom(ec echo.Context, roomId string) error {
+func (s *Server) GetRoom(ec echo.Context, roomId openapi_types.UUID) error {
 	room, err := s.Repo.GetRoom(roomId)
 	if err != nil {
 		return catch(ec, err)
 	}
-	parseMember, err := parser.ParseMemberIdNameArgsToMember(room.Members)
+	members, err := s.Repo.GetRoomMembers(roomId)
 	if err != nil {
 		return catch(ec, err)
 	}
-	parseResult := parser.ParseResultArgsToResult(room.Results)
-	parseTxn, err := parser.ParseTxnArgsToTxn(room.Txns)
+	events, err := s.Repo.GetRoomEvents(roomId)
 	if err != nil {
 		return catch(ec, err)
 	}
-	log.Print("aa")
-	return ec.JSON(http.StatusOK, api.RoomDetails{
-		CreatedAt: *room.CreatedAt,
-		Id:        room.Id,
-		Members:   *parseMember,
-		Name:      *room.Name,
-		Results:   *parseResult,
-		Txns:      *parseTxn,
-	})
+	r := model.NewRoomDetails(room, members, events)
+	return ec.JSON(http.StatusOK, parser.Model{}.RoomDetail(r))
 }
 
 // add member to room
-// (POST /rooms/{roomId}/member)
-func (s *Server) AddMember(ec echo.Context, roomId string) error {
+// (POST /rooms/{roomId}/members)
+func (s *Server) AddMember(ec echo.Context, roomId openapi_types.UUID) error {
 	req := api.AddMemberJSONRequestBody{}
 	if err := ec.Bind(&req); err != nil {
 		return catch(ec, err)
 	}
 	arg := parser.ParseAddMemberJSONRequestBody(req, roomId)
-	if err := s.Repo.AddMember(arg); err != nil {
+	if err := s.Repo.CreateMember(arg); err != nil {
 		return catch(ec, err)
 	}
 	return ec.JSON(http.StatusOK, api.AddMemberJSONBody{
@@ -76,65 +69,55 @@ func (s *Server) AddMember(ec echo.Context, roomId string) error {
 }
 
 // delete member from room
-// (DELETE /rooms/{roomId}/member/{memberId})
-func (s *Server) DeleteMember(ec echo.Context, roomId string, memberId string) error {
+// (DELETE /rooms/{roomId}/members/{memberId})
+func (s *Server) DeleteMember(ec echo.Context, roomId openapi_types.UUID, memberId openapi_types.UUID) error {
 	if err := s.Repo.DeleteMember(roomId, memberId); err != nil {
 		return catch(ec, err)
 	}
 	return ec.NoContent(http.StatusNoContent)
 }
 
-// add txn to room
-// (POST /rooms/{roomId}/txn)
-func (s *Server) AddTransaction(ec echo.Context, roomId string) error {
-	req := api.AddTransactionJSONRequestBody{}
-	if err := ec.Bind(&req); err != nil {
-		return catch(ec, err)
+// add event to room
+// (POST /rooms/{roomId}/events)
+func (s *Server) AddEvent(ctx echo.Context, roomId openapi_types.UUID) error {
+	req := api.AddEventJSONRequestBody{}
+	if err := ctx.Bind(&req); err != nil {
+		return catch(ctx, err)
 	}
-	arg := parser.ParseAddTransactionJSONRequestBody(req, roomId)
-	createdAt, err := s.Repo.AddTransaction(arg)
+	arg := parser.ParseAddEventJSONRequestBody(req, roomId)
+	if err := s.Repo.CreateEvent(arg); err != nil {
+		return catch(ctx, err)
+	}
+	event, err := s.Repo.GetEvent(arg.Id)
 	if err != nil {
-		return catch(ec, err)
+		return catch(ctx, err)
 	}
-	return ec.JSON(http.StatusOK, api.Txn{
-		Amount:      req.Amount,
-		CreatedAt:   *createdAt,
-		Description: req.Description,
-		Id:          req.Id,
-		PaidAt:      req.PaidAt,
-		Payer:       req.Payer,
-		Receivers:   req.Receivers,
-	})
+	return ctx.JSON(http.StatusOK, parser.Model{}.Event(event))
 }
 
-// delete txn from room
-// (DELETE /rooms/{roomId}/txn/{txnId})
-func (s *Server) DeleteTransaction(ec echo.Context, roomId string, txnId string) error {
-	if err := s.Repo.DeleteTransaction(roomId, txnId); err != nil {
-		return catch(ec, err)
+// delete event from room
+// (DELETE /rooms/{roomId}/events/{eventId})
+func (s *Server) DeleteEvent(ctx echo.Context, roomId openapi_types.UUID, eventId openapi_types.UUID) error {
+	if err := s.Repo.DeleteEvent(eventId); err != nil {
+		return catch(ctx, err)
 	}
-	return ec.NoContent(http.StatusNoContent)
+	return ctx.NoContent(http.StatusNoContent)
 }
 
-// edit txn of room
-// (PUT /rooms/{roomId}/txn/{txnId})
-func (s *Server) EditTransaction(ec echo.Context, roomId string, txnId string) error {
-	req := api.EditTransactionJSONRequestBody{}
-	if err := ec.Bind(&req); err != nil {
-		return catch(ec, err)
+// edit event of room
+// (PUT /rooms/{roomId}/events/{eventId})
+func (s *Server) EditEvent(ctx echo.Context, roomId openapi_types.UUID, eventId openapi_types.UUID) error {
+	req := api.EditEventJSONRequestBody{}
+	if err := ctx.Bind(&req); err != nil {
+		return catch(ctx, err)
 	}
-	arg := parser.ParseEditTransactionJSONRequestBody(req, roomId, txnId)
-	createdAt, err := s.Repo.EditTransaction(arg)
+	arg := parser.ParseEditEventJSONRequestBody(req, eventId)
+	if err := s.Repo.UpdateEvent(arg); err != nil {
+		return catch(ctx, err)
+	}
+	event, err := s.Repo.GetEvent(arg.Id)
 	if err != nil {
-		return catch(ec, err)
+		return catch(ctx, err)
 	}
-	return ec.JSON(http.StatusOK, api.Txn{
-		Amount:      req.Amount,
-		CreatedAt:   *createdAt,
-		Description: req.Description,
-		Id:          req.Id,
-		PaidAt:      req.PaidAt,
-		Payer:       req.Payer,
-		Receivers:   req.Receivers,
-	})
+	return ctx.JSON(http.StatusOK, parser.Model{}.Event(event))
 }
