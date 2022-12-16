@@ -101,3 +101,8 @@ curl -XPUT \
 localhost:8080/rooms/c3cf4b9a-7316-4a41-bf60-194080cbe682/events/3fa85f64-5717-4562-b3fc-2c963f66afa6
 ```
 
+### GET /rooms/{roomId}
+
+```
+curl -XGET localhost:8080/rooms/c3cf4b9a-7316-4a41-bf60-194080cbe682
+```
