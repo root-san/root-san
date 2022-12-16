@@ -1,7 +1,6 @@
 package impl
 
 import (
-	"fmt"
 	"time"
 
 	"github.com/google/uuid"
@@ -32,19 +31,16 @@ func (r *Repository) CreateEvent(args *repository.CreateEventArgs) error {
 
 func (r *Repository) GetEvent(eventId uuid.UUID) (*model.Event, error) {
 	eve := &event{}
-	fmt.Println("yaa")
 	err := r.db.Get(eve, "SELECT * FROM events WHERE id = ?", eventId)
 	if err != nil {
 		return nil, err
 	}
-	fmt.Println("koko")
 	// eventIdを元にtransactionを取得
 	var txns []*model.Transaction
 	rows, err := r.db.Queryx("SELECT * FROM transactions WHERE event_id = ?", eventId)
 	if err != nil {
 		return nil, err
 	}
-	fmt.Println("rows:")
 	for rows.Next() {
 		var txn transaction
 		if err := rows.StructScan(&txn); err != nil {
@@ -103,7 +99,7 @@ func (r *Repository) UpdateEvent(args *repository.UpdateEventArgs) error {
 	}
 	// トランザクションを更新
 	for _, txn := range args.Txns {
-		_, err = tx.Exec("UPDATE transactions SET amount = ?, payer = ?, receiver = ? WHERE id = ?", txn.Amount, txn.Payer, txn.Receiver, txn.Id)
+		_, err = tx.Exec("UPDATE transactions SET amount = ?, payer_id = ?, receiver_id = ? WHERE id = ?", txn.Amount, txn.Payer, txn.Receiver, txn.Id)
 		if err != nil {
 			return err
 		}
