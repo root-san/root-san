@@ -1,7 +1,6 @@
 package impl
 
 import (
-	"log"
 	"time"
 
 	"github.com/google/uuid"
@@ -17,44 +16,73 @@ func (r *Repository) CreateRoom(args *repository.RoomArgs) error {
 }
 
 func (r *Repository) GetRoom(roomId string) (repository.RoomDetailsArgs, error) {
-	var ReturnRoomDetails repository.RoomDetailsArgs
+	var RoomDetailsReturn repository.RoomDetailsArgs
 	// Parse roomId to uuid.UUID
 	roomIdUuid, err := uuid.Parse(roomId)
 	if err != nil {
-		return ReturnRoomDetails, err
+		return RoomDetailsReturn, err
 	}
-	ReturnRoomDetails.Id = roomIdUuid
+	RoomDetailsReturn.Id = roomIdUuid
 	// Get CreatedAt and Name
 	var CreatedTimeNameList []repository.CreatedTimeNameArgs
 	if err := r.db.Select(&CreatedTimeNameList, "SELECT created_at, name FROM rooms WHERE id = ?", roomId); err != nil {
-		return ReturnRoomDetails, err
+		return RoomDetailsReturn, err
 	}
-	ReturnRoomDetails.CreatedAt = &CreatedTimeNameList[0].CreatedAt
-	ReturnRoomDetails.Name = &CreatedTimeNameList[0].Name
+	RoomDetailsReturn.CreatedAt = &CreatedTimeNameList[0].CreatedAt
+	RoomDetailsReturn.Name = &CreatedTimeNameList[0].Name
 	// Get Members
 	var MemberList []repository.MemberIdNameArgs
 	if err := r.db.Select(&MemberList, "SELECT member_id, name FROM room_members WHERE room_id = ?", roomId); err != nil {
-		return ReturnRoomDetails, err
+		return RoomDetailsReturn, err
 	}
-	ReturnRoomDetails.Members = MemberList
+	RoomDetailsReturn.Members = MemberList
 	// Get transactions.id, transactions.room_id, transactions.payer_id, transactions.description, transactions.amount, transaction_receivers.member_id
-	var TxnList []repository.TxnArgs
+	var TxnList []repository.TxnResultArgs
 	if err := r.db.Select(&TxnList, "SELECT transactions.id, transactions.room_id, transactions.payer_id, transactions.description, transactions.amount, transaction_receivers.member_id FROM transactions INNER JOIN transaction_receivers ON transactions.id = transaction_receivers.transaction_id WHERE transactions.room_id = ?", roomId); err != nil {
-		return ReturnRoomDetails, err
+		return RoomDetailsReturn, err
 	}
-	ReturnRoomDetails.Txns = TxnList
+
+	TxnReturnList := make([]repository.TxnArgs, len(TxnList))
+
+	// change txn.Receivers to slice
+	var ReceivesList []uuid.UUID
+	var count int = 0
+	for i, txn := range TxnList {
+		ReceivesList = append(ReceivesList, txn.Receiver)
+		if i == len(TxnList)-1 {
+			TxnReturnList[count] = repository.TxnArgs{
+				Id:          txn.Id,
+				PayerId:     txn.PayerId,
+				Description: txn.Description,
+				Amount:      txn.Amount,
+				Receivers:   ReceivesList,
+			}
+		} else if TxnList[i].Id != TxnList[i+1].Id {
+			TxnReturnList[count] = repository.TxnArgs{
+				Id:          txn.Id,
+				PayerId:     txn.PayerId,
+				Description: txn.Description,
+				Amount:      txn.Amount,
+				Receivers:   ReceivesList,
+			}
+			count++
+			ReceivesList = nil
+		}
+	}
+
+	RoomDetailsReturn.Txns = TxnReturnList
 	var ResultList []repository.ResultArgs
-	for _, txn := range TxnList {
-		for _, receiver := range txn.Receivers {
+	for _, txn := range TxnReturnList {
+		for i := 0; i < len(txn.Receivers); i++ {
 			ResultList = append(ResultList, repository.ResultArgs{
-				Amount:   txn.Amount,
-				Receiver: receiver,
+				Amount:   int(txn.Amount / len(txn.Receivers)),
+				Receiver: txn.Receivers[i],
 				Payer:    txn.PayerId,
 			})
 		}
 	}
-	ReturnRoomDetails.Results = ResultList
-	return ReturnRoomDetails, nil
+	RoomDetailsReturn.Results = ResultList
+	return RoomDetailsReturn, nil
 }
 
 func (r *Repository) AddMember(args *repository.MemberArgs) error {
@@ -88,7 +116,6 @@ func (r *Repository) AddTransaction(args *repository.TxnArgs) (*time.Time, error
 	if err := r.db.Select(&CreatedTimeList, "SELECT created_at FROM transactions WHERE id = ?", args.Id); err != nil {
 		return nil, err
 	}
-	log.Print("aa")
 	return &CreatedTimeList[0], nil
 }
 

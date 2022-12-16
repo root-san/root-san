@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"log"
 	"net/http"
 
 	"github.com/labstack/echo/v4"
@@ -46,13 +47,14 @@ func (s *Server) GetRoom(ec echo.Context, roomId string) error {
 	if err != nil {
 		return catch(ec, err)
 	}
+	log.Print("aa")
 	return ec.JSON(http.StatusOK, api.RoomDetails{
-		CreatedAt: room.CreatedAt,
-		Id:        &room.Id,
-		Members:   parseMember,
-		Name:      room.Name,
-		Results:   parseResult,
-		Txns:      parseTxn,
+		CreatedAt: *room.CreatedAt,
+		Id:        room.Id,
+		Members:   *parseMember,
+		Name:      *room.Name,
+		Results:   *parseResult,
+		Txns:      *parseTxn,
 	})
 }
 
@@ -96,7 +98,7 @@ func (s *Server) AddTransaction(ec echo.Context, roomId string) error {
 	}
 	return ec.JSON(http.StatusOK, api.Txn{
 		Amount:      req.Amount,
-		CreatedAt:   createdAt,
+		CreatedAt:   *createdAt,
 		Description: req.Description,
 		Id:          req.Id,
 		PaidAt:      req.PaidAt,
@@ -128,7 +130,7 @@ func (s *Server) EditTransaction(ec echo.Context, roomId string, txnId string) e
 	}
 	return ec.JSON(http.StatusOK, api.Txn{
 		Amount:      req.Amount,
-		CreatedAt:   createdAt,
+		CreatedAt:   *createdAt,
 		Description: req.Description,
 		Id:          req.Id,
 		PaidAt:      req.PaidAt,

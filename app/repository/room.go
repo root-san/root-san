@@ -87,3 +87,20 @@ type ResultArgs struct {
 	// Payer
 	Payer uuid.UUID
 }
+
+type TxnResultArgs struct {
+	// TransactionId
+	Id string `db:"id"`
+	// RoomId
+	RoomId string `db:"room_id"`
+	// PayerId
+	PayerId uuid.UUID `db:"payer_id"`
+	// Description
+	Description string `db:"description"`
+	// Amount
+	Amount int `db:"amount"`
+	// Receivers
+	Receiver uuid.UUID `db:"member_id"`
+	// PaidTime
+	PaidAt *time.Time `db:"paid_at"`
+}

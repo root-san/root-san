@@ -15,52 +15,52 @@ import (
 
 // Member defines model for Member.
 type Member struct {
-	Id   *openapi_types.UUID `json:"id,omitempty"`
-	Name *string             `json:"name,omitempty"`
+	Id   openapi_types.UUID `json:"id"`
+	Name string             `json:"name"`
 }
 
 // Result defines model for Result.
 type Result struct {
-	Amount   *int                `json:"amount,omitempty"`
-	Payer    *openapi_types.UUID `json:"payer,omitempty"`
-	Receiver *openapi_types.UUID `json:"receiver,omitempty"`
+	Amount   int                `json:"amount"`
+	Payer    openapi_types.UUID `json:"payer"`
+	Receiver openapi_types.UUID `json:"receiver"`
 }
 
 // Room defines model for Room.
 type Room struct {
-	Id   *openapi_types.UUID `json:"id,omitempty"`
-	Name *string             `json:"name,omitempty"`
+	Id   openapi_types.UUID `json:"id"`
+	Name string             `json:"name"`
 }
 
 // RoomDetails defines model for RoomDetails.
 type RoomDetails struct {
-	CreatedAt *time.Time          `json:"createdAt,omitempty"`
-	Id        *openapi_types.UUID `json:"id,omitempty"`
-	Members   *[]Member           `json:"members,omitempty"`
-	Name      *string             `json:"name,omitempty"`
-	Results   *[]Result           `json:"results,omitempty"`
-	Txns      *[]Txn              `json:"txns,omitempty"`
+	CreatedAt time.Time          `json:"createdAt"`
+	Id        openapi_types.UUID `json:"id"`
+	Members   []Member           `json:"members"`
+	Name      string             `json:"name"`
+	Results   []Result           `json:"results"`
+	Txns      []Txn              `json:"txns"`
 }
 
 // Txn defines model for Txn.
 type Txn struct {
-	Amount      *int                  `json:"amount,omitempty"`
-	CreatedAt   *time.Time            `json:"createdAt,omitempty"`
-	Description *string               `json:"description,omitempty"`
-	Id          *openapi_types.UUID   `json:"id,omitempty"`
-	PaidAt      *time.Time            `json:"paidAt,omitempty"`
-	Payer       *openapi_types.UUID   `json:"payer,omitempty"`
-	Receivers   *[]openapi_types.UUID `json:"receivers,omitempty"`
+	Amount      int                  `json:"amount"`
+	CreatedAt   time.Time            `json:"createdAt"`
+	Description string               `json:"description"`
+	Id          openapi_types.UUID   `json:"id"`
+	PaidAt      time.Time            `json:"paidAt"`
+	Payer       openapi_types.UUID   `json:"payer"`
+	Receivers   []openapi_types.UUID `json:"receivers"`
 }
 
 // TxnRequestBody defines model for TxnRequestBody.
 type TxnRequestBody struct {
-	Amount      *int                  `json:"amount,omitempty"`
-	Description *string               `json:"description,omitempty"`
-	Id          *openapi_types.UUID   `json:"id,omitempty"`
-	PaidAt      *time.Time            `json:"paidAt,omitempty"`
-	Payer       *openapi_types.UUID   `json:"payer,omitempty"`
-	Receivers   *[]openapi_types.UUID `json:"receivers,omitempty"`
+	Amount      int                  `json:"amount"`
+	Description string               `json:"description"`
+	Id          openapi_types.UUID   `json:"id"`
+	PaidAt      time.Time            `json:"paidAt"`
+	Payer       openapi_types.UUID   `json:"payer"`
+	Receivers   []openapi_types.UUID `json:"receivers"`
 }
 
 // CreateRoomJSONBody defines parameters for CreateRoom.
