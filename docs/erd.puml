@@ -18,34 +18,38 @@ package "root-san" as root_san {
 
     entity "room_members" as room_members {
         + member_id: char(36)
-        + room_id: char(36)
+        + room_id: char(36) <<FK>>
         --
         + name: varchar(300)
         + created_at: timestamp
     }
 
-    entity "transactions" as transactions {
+    entity "events" as events {
         + id: char(36)
         --
-        + room_id: char(36)
+        + room_id: char(36) <<FK>>
         + amount: int
-        + payer_id: char(36)
-        + paid_at: datetime
-        + description: varchar(300)
+        + name: varchar(300)
+        + event_at: datetime
         + created_at: timestamp
         + updated_at: timestamp
     }
 
-    entity "transaction_receivers" as transaction_receivers {
-        + member_id: char(36)
-        + transaction_id: char(36)
+    entity "transactions" as transactions {
+        + id
         --
+        + event_id: char(36) <<FK>>
+        + amount: int
+        + payer_id: char(36)
+        + receiver_id: char(36)
+        + description: varchar(300)
         + created_at: timestamp
+        + updated_at: timestamp
     }
 }
 
 rooms ||--|{ room_members
-rooms ||--|{ transactions
-transactions ||--|{ transaction_receivers
+rooms ||--|{ events
+events ||--|{ transactions
 
 @enduml
