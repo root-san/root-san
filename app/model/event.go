@@ -12,7 +12,7 @@ type Event struct {
 	Amount    int
 	EventType EventType
 	EventAt   time.Time
-	txns      []*Transaction
+	Txns      []*Transaction
 }
 
 type EventType string
