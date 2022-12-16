@@ -1,12 +1,12 @@
 package impl
 
 import (
+	"github.com/google/uuid"
 	"github.com/root-san/root-san/app/model"
 	"github.com/root-san/root-san/app/repository"
 )
 
 func (r *Repository) CreateEvent(args *repository.CreateEventArgs) error {
-	// 複数テーブルを更新するのでトランザクションを行う
 	tx, err := r.db.Begin()
 	defer tx.Rollback()
 	if err != nil {
@@ -25,12 +25,11 @@ func (r *Repository) CreateEvent(args *repository.CreateEventArgs) error {
 	return tx.Commit()
 }
 
-func (r *Repository) GetEvent(eventId string) (*model.Event, error) {
+func (r *Repository) GetEvent(eventId uuid.UUID) (*model.Event, error) {
 	return nil, nil
 }
 
 func (r *Repository) UpdateEvent(args *repository.UpdateEventArgs) error {
-	// 複数テーブルを更新するのでトランザクションを行う
 	tx, err := r.db.Begin()
 	defer tx.Rollback()
 	if err != nil {
@@ -51,6 +50,16 @@ func (r *Repository) UpdateEvent(args *repository.UpdateEventArgs) error {
 	return tx.Commit()
 }
 
-func (r *Repository) DeleteEvent(eventId string) error {
-	return nil
+func (r *Repository) DeleteEvent(eventId uuid.UUID) error {
+	tx, err := r.db.Begin()
+	defer tx.Rollback()
+	if err != nil {
+		return err
+	}
+	// ON DELETE CASCADE でトランザクションも削除される
+	_, err = tx.Exec("DELETE FROM events WHERE id = ?", eventId)
+	if err != nil {
+		return err
+	}
+	return tx.Commit()
 }

@@ -3,6 +3,7 @@ package repository
 import (
 	"time"
 
+	"github.com/google/uuid"
 	"github.com/root-san/root-san/app/model"
 )
 
@@ -10,15 +11,15 @@ type EventRepository interface {
 	// CreateEvent
 	CreateEvent(args *CreateEventArgs) error
 	// GetEvent
-	GetEvent(eventId string) (*model.Event, error)
+	GetEvent(eventId uuid.UUID) (*model.Event, error)
 	// Update Event
 	UpdateEvent(args *UpdateEventArgs) error
 	// Delete Event
-	DeleteEvent(eventId string) error
+	DeleteEvent(eventId uuid.UUID) error
 }
 
 type CreateEventArgs struct {
-	Id        string
+	Id        uuid.UUID
 	Name      string
 	Amount    int
 	EventType string
@@ -28,18 +29,18 @@ type CreateEventArgs struct {
 }
 
 type Transaction struct {
-	Id       string `db:"id"`
+	Id       uuid.UUID `db:"id"`
 	Amount   int   `db:"amount"`
 	Payer    string `db:"payer"`
 	Receiver string `db:"receiver"`
 }
 
 type UpdateEventArgs struct {
-	Id        string
+	Id        uuid.UUID
 	Name      string
 	Amount    int
 	EventType string
-	eventAt   time.Time
+	EventAt   time.Time
 
 	Txns []*Transaction
 }
