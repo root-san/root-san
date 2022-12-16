@@ -38,7 +38,7 @@ func (s *Server) GetRoom(ec echo.Context, roomId openapi_types.UUID) error {
 }
 
 // add member to room
-// (POST /rooms/{roomId}/member)
+// (POST /rooms/{roomId}/members)
 func (s *Server) AddMember(ec echo.Context, roomId openapi_types.UUID) error {
 	req := api.AddMemberJSONRequestBody{}
 	if err := ec.Bind(&req); err != nil {
@@ -55,7 +55,7 @@ func (s *Server) AddMember(ec echo.Context, roomId openapi_types.UUID) error {
 }
 
 // delete member from room
-// (DELETE /rooms/{roomId}/member/{memberId})
+// (DELETE /rooms/{roomId}/members/{memberId})
 func (s *Server) DeleteMember(ec echo.Context, roomId openapi_types.UUID, memberId openapi_types.UUID) error {
 	if err := s.Repo.DeleteMember(roomId, memberId); err != nil {
 		return catch(ec, err)
@@ -64,7 +64,7 @@ func (s *Server) DeleteMember(ec echo.Context, roomId openapi_types.UUID, member
 }
 
 // add event to room
-// (POST /rooms/{roomId}/event)
+// (POST /rooms/{roomId}/events)
 func (s *Server) AddEvent(ctx echo.Context, roomId openapi_types.UUID) error {
 	req := api.AddEventJSONRequestBody{}
 	if err := ctx.Bind(&req); err != nil {
@@ -82,7 +82,7 @@ func (s *Server) AddEvent(ctx echo.Context, roomId openapi_types.UUID) error {
 }
 
 // delete event from room
-// (DELETE /rooms/{roomId}/event/{eventId})
+// (DELETE /rooms/{roomId}/events/{eventId})
 func (s *Server) DeleteEvent(ctx echo.Context, roomId openapi_types.UUID, eventId openapi_types.UUID) error {
 	if err := s.Repo.DeleteEvent(eventId); err != nil {
 		return catch(ctx, err)
@@ -91,7 +91,7 @@ func (s *Server) DeleteEvent(ctx echo.Context, roomId openapi_types.UUID, eventI
 }
 
 // edit event of room
-// (PUT /rooms/{roomId}/event/{eventId})
+// (PUT /rooms/{roomId}/events/{eventId})
 func (s *Server) EditEvent(ctx echo.Context, roomId openapi_types.UUID, eventId openapi_types.UUID) error {
 	req := api.EditEventJSONRequestBody{}
 	if err := ctx.Bind(&req); err != nil {
