@@ -83,8 +83,11 @@ func (s *Server) AddEvent(ctx echo.Context, roomId openapi_types.UUID) error {
 
 // delete event from room
 // (DELETE /rooms/{roomId}/event/{eventId})
-func (s *Server) DeleteEvent(ctx echo.Context, roomId string, eventId string) error {
-	return nil
+func (s *Server) DeleteEvent(ctx echo.Context, roomId openapi_types.UUID, eventId openapi_types.UUID) error {
+	if err := s.Repo.DeleteEvent(eventId); err != nil {
+		return catch(ctx, err)
+	}
+	return ctx.NoContent(http.StatusNoContent)
 }
 
 // edit event of room
