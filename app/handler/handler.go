@@ -37,9 +37,22 @@ func (s *Server) GetRoom(ec echo.Context, roomId string) error {
 	if err != nil {
 		return catch(ec, err)
 	}
+	parseMember, err := parser.ParseMemberIdNameArgsToMember(room.Members)
+	if err != nil {
+		return catch(ec, err)
+	}
+	parseResult := parser.ParseResultArgsToResult(room.Results)
+	parseTxn, err := parser.ParseTxnArgsToTxn(room.Txns)
+	if err != nil {
+		return catch(ec, err)
+	}
 	return ec.JSON(http.StatusOK, api.RoomDetails{
-		Id:   &room.Id,
-		Name: &room.Name,
+		CreatedAt: room.CreatedAt,
+		Id:        &room.Id,
+		Members:   parseMember,
+		Name:      room.Name,
+		Results:   parseResult,
+		Txns:      parseTxn,
 	})
 }
 

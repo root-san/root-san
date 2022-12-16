@@ -21,7 +21,7 @@ type Member struct {
 
 // Result defines model for Result.
 type Result struct {
-	Amount   *float32            `json:"amount,omitempty"`
+	Amount   *int                `json:"amount,omitempty"`
 	Payer    *openapi_types.UUID `json:"payer,omitempty"`
 	Receiver *openapi_types.UUID `json:"receiver,omitempty"`
 }
@@ -44,7 +44,7 @@ type RoomDetails struct {
 
 // Txn defines model for Txn.
 type Txn struct {
-	Amount      *float32              `json:"amount,omitempty"`
+	Amount      *int                  `json:"amount,omitempty"`
 	CreatedAt   *time.Time            `json:"createdAt,omitempty"`
 	Description *string               `json:"description,omitempty"`
 	Id          *openapi_types.UUID   `json:"id,omitempty"`
@@ -55,7 +55,7 @@ type Txn struct {
 
 // TxnRequestBody defines model for TxnRequestBody.
 type TxnRequestBody struct {
-	Amount      *float32              `json:"amount,omitempty"`
+	Amount      *int                  `json:"amount,omitempty"`
 	Description *string               `json:"description,omitempty"`
 	Id          *openapi_types.UUID   `json:"id,omitempty"`
 	PaidAt      *time.Time            `json:"paidAt,omitempty"`

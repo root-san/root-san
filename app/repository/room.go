@@ -10,17 +10,17 @@ type RoomRepository interface {
 	// CreateRoom
 	CreateRoom(args *RoomArgs) error
 	// GetRoom
-	GetRoom(roomId string) (RoomIdName, error)
+	GetRoom(roomId string) (RoomDetailsArgs, error)
 	// AddMember
 	AddMember(args *MemberArgs) error
 	// DeleteMember
 	DeleteMember(roomId string, memberId string) error
 	// AddTransaction
-	AddTransaction(args *TransactionArgs) (*time.Time, error)
+	AddTransaction(args *TxnArgs) (*time.Time, error)
 	// DeleteTransaction
 	DeleteTransaction(roomId string, txnId string) error
 	// EditTransaction
-	EditTransaction(args *TransactionArgs) (*time.Time, error)
+	EditTransaction(args *TxnArgs) (*time.Time, error)
 }
 
 type RoomArgs struct {
@@ -30,40 +30,60 @@ type RoomArgs struct {
 	Name string
 }
 
-type RoomIdName struct {
-	// RoomId
-	Id uuid.UUID `json:"id"`
-	// RoomName
-	Name string `json:"name"`
+type RoomDetailsArgs struct {
+	CreatedAt *time.Time
+	Id        uuid.UUID
+	Members   []MemberIdNameArgs
+	Name      *string
+	Results   []ResultArgs
+	Txns      []TxnArgs
 }
 
 type MemberArgs struct {
 	// MemberId
-	Id string
+	Id uuid.UUID
 	// RoomId
 	RoomId string
 	// MemberName
 	Name string
 }
 
-type TransactionArgs struct {
+type MemberIdNameArgs struct {
+	// MemberId
+	Id string `db:"member_id"`
+	// MemberName
+	Name string `db:"name"`
+}
+
+type CreatedTimeNameArgs struct {
+	// CreatedTime
+	CreatedAt time.Time `db:"created_at"`
+	// RoomName
+	Name string `db:"name"`
+}
+
+type TxnArgs struct {
 	// TransactionId
-	Id string
+	Id string `db:"id"`
 	// RoomId
-	RoomId string
+	RoomId string `db:"room_id"`
 	// PayerId
-	PayerId string
+	PayerId uuid.UUID `db:"payer_id"`
 	// Description
-	Description string
+	Description string `db:"description"`
 	// Amount
-	Amount float32
+	Amount int `db:"amount"`
+	// Receivers
+	Receivers []uuid.UUID `db:"member_id"`
+	// PaidTime
+	PaidAt *time.Time `db:"paid_at"`
 }
 
 type ResultArgs struct {
 	// Amount
-	Amount float32
+	Amount int
 	// Receiver
-	Receiver string
+	Receiver uuid.UUID
 	// Payer
-	Payer string
+	Payer uuid.UUID
 }

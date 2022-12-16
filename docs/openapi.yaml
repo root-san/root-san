@@ -190,7 +190,7 @@ components:
       type: object
       properties:
         amount:
-          type: number
+          type: integer
         description:
           type: string
         receivers:
@@ -214,7 +214,7 @@ components:
           type: string
           format: date-time
         amount:
-          type: number
+          type: integer
         description:
           type: string
         receivers:
@@ -235,7 +235,7 @@ components:
       type: object
       properties:
         amount:
-          type: number
+          type: integer
         receiver:
           type: string
           format: uuid
