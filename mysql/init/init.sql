@@ -14,7 +14,8 @@ CREATE TABLE IF NOT EXISTS `room_members` (
   `room_id` char(36) NOT NULL,
   `name` varchar(300) NOT NULL,
   `created_at` timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL,
-  PRIMARY KEY (`member_id`, `room_id`)
+  PRIMARY KEY (`member_id`, `room_id`),
+  FOREIGN KEY (`room_id`) REFERENCES `rooms`(`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 CREATE TABLE IF NOT EXISTS `transactions` (
@@ -27,7 +28,7 @@ CREATE TABLE IF NOT EXISTS `transactions` (
   `created_at` timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL,
   `updated_at` timestamp DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP NOT NULL,
   PRIMARY KEY (`id`),
-  FOREIGN KEY (`room_id`) REFERENCES `rooms`(`id`)
+  FOREIGN KEY (`room_id`) REFERENCES `rooms`(`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 CREATE TABLE IF NOT EXISTS `transaction_receivers` (
@@ -35,5 +36,5 @@ CREATE TABLE IF NOT EXISTS `transaction_receivers` (
     `transaction_id` char(36) NOT NULL,
     `created_at` timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL,
     PRIMARY KEY (`member_id`, `transaction_id`),
-    FOREIGN KEY (`transaction_id`) REFERENCES `transactions`(`id`)
+    FOREIGN KEY (`transaction_id`) REFERENCES `transactions`(`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
