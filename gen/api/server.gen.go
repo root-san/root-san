@@ -123,19 +123,19 @@ type ServerInterface interface {
 	// (GET /rooms/{roomId})
 	GetRoom(ctx echo.Context, roomId openapi_types.UUID) error
 	// add event to room
-	// (POST /rooms/{roomId}/event)
+	// (POST /rooms/{roomId}/events)
 	AddEvent(ctx echo.Context, roomId openapi_types.UUID) error
 	// delete event from room
-	// (DELETE /rooms/{roomId}/event/{eventId})
+	// (DELETE /rooms/{roomId}/events/{eventId})
 	DeleteEvent(ctx echo.Context, roomId openapi_types.UUID, eventId openapi_types.UUID) error
 	// edit event of room
-	// (PUT /rooms/{roomId}/event/{eventId})
+	// (PUT /rooms/{roomId}/events/{eventId})
 	EditEvent(ctx echo.Context, roomId openapi_types.UUID, eventId openapi_types.UUID) error
 	// add member to room
-	// (POST /rooms/{roomId}/member)
+	// (POST /rooms/{roomId}/members)
 	AddMember(ctx echo.Context, roomId openapi_types.UUID) error
 	// delete member from room
-	// (DELETE /rooms/{roomId}/member/{memberId})
+	// (DELETE /rooms/{roomId}/members/{memberId})
 	DeleteMember(ctx echo.Context, roomId openapi_types.UUID, memberId openapi_types.UUID) error
 }
 
@@ -303,10 +303,10 @@ func RegisterHandlersWithBaseURL(router EchoRouter, si ServerInterface, baseURL 
 
 	router.POST(baseURL+"/rooms", wrapper.CreateRoom)
 	router.GET(baseURL+"/rooms/:roomId", wrapper.GetRoom)
-	router.POST(baseURL+"/rooms/:roomId/event", wrapper.AddEvent)
-	router.DELETE(baseURL+"/rooms/:roomId/event/:eventId", wrapper.DeleteEvent)
-	router.PUT(baseURL+"/rooms/:roomId/event/:eventId", wrapper.EditEvent)
-	router.POST(baseURL+"/rooms/:roomId/member", wrapper.AddMember)
-	router.DELETE(baseURL+"/rooms/:roomId/member/:memberId", wrapper.DeleteMember)
+	router.POST(baseURL+"/rooms/:roomId/events", wrapper.AddEvent)
+	router.DELETE(baseURL+"/rooms/:roomId/events/:eventId", wrapper.DeleteEvent)
+	router.PUT(baseURL+"/rooms/:roomId/events/:eventId", wrapper.EditEvent)
+	router.POST(baseURL+"/rooms/:roomId/members", wrapper.AddMember)
+	router.DELETE(baseURL+"/rooms/:roomId/members/:memberId", wrapper.DeleteMember)
 
 }
