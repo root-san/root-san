@@ -30,7 +30,25 @@ func (r *Repository) GetEvent(eventId string) (*model.Event, error) {
 }
 
 func (r *Repository) UpdateEvent(args *repository.UpdateEventArgs) error {
-	return nil
+	// 複数テーブルを更新するのでトランザクションを行う
+	tx, err := r.db.Begin()
+	defer tx.Rollback()
+	if err != nil {
+		return err
+	}
+	// イベントを更新
+	_, err = tx.Exec("UPDATE events SET name = ?, amount = ?, event_type = ?, event_at = ? WHERE id = ?", args.Name, args.Amount, args.EventType, args.EventAt, args.Id)
+	if err != nil {
+		return err
+	}
+	// トランザクションを更新
+	for _, txn := range args.Txns {
+		_, err = tx.Exec("UPDATE transactions SET amount = ?, payer = ?, receiver = ? WHERE id = ?", txn.Amount, txn.Payer, txn.Receiver, txn.Id)
+		if err != nil {
+			return err
+		}
+	}
+	return tx.Commit()
 }
 
 func (r *Repository) DeleteEvent(eventId string) error {
