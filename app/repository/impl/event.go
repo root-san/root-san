@@ -15,7 +15,7 @@ func (r *Repository) CreateEvent(args *repository.CreateEventArgs) error {
 		return err
 	}
 	// イベントを作成
-	_, err = tx.Exec("INSERT INTO events (id, name, amount, event_type, event_at) VALUES (?, ?, ?, ?, ?)", args.Id, args.Name, args.Amount, args.EventType, args.EventAt)
+	_, err = tx.Exec("INSERT INTO events (id, room_id, name, amount, event_type, event_at) VALUES (?, ?, ?, ?, ?)", args.Id, args.RoomID, args.Name, args.Amount, args.EventType, args.EventAt)
 	if err != nil {
 		return err
 	}
@@ -61,6 +61,7 @@ func (r *Repository) GetEvent(eventId uuid.UUID) (*model.Event, error) {
 
 type event struct {
 	id        uuid.UUID `db:"id"`
+	roomId    uuid.UUID `db:"room_id"`
 	name      string    `db:"name"`
 	amount    int       `db:"amount"`
 	eventType string    `db:"event_type"`
