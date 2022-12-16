@@ -155,6 +155,9 @@ components:
           format: uuid
         name:
           type: string
+      required:
+        - id
+        - name
     RoomDetails:
       type: object
       properties:
@@ -178,6 +181,13 @@ components:
         createdAt:
           type: string
           format: date-time
+      required:
+        - id
+        - name
+        - members
+        - txns
+        - results
+        - createdAt
     Member:
       type: object
       properties:
@@ -186,6 +196,9 @@ components:
           format: uuid
         name:
           type: string
+      required:
+        - id
+        - name
     TxnRequestBody:
       type: object
       properties:
@@ -207,6 +220,13 @@ components:
         paidAt:
           type: string
           format: date-time
+      required:
+        - amount
+        - description
+        - receivers
+        - payer
+        - id
+        - paidAt
     Txn:
       type: object
       properties:
@@ -231,6 +251,14 @@ components:
         paidAt:
           type: string
           format: date-time
+      required:
+        - createdAt
+        - amount
+        - description
+        - receivers
+        - payer
+        - id
+        - paidAt
     Result:
       type: object
       properties:
@@ -242,3 +270,7 @@ components:
         payer:
           type: string
           format: uuid
+      required:
+        - amount
+        - receiver
+        - payer
