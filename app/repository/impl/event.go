@@ -15,7 +15,7 @@ func (r *Repository) CreateEvent(args *repository.CreateEventArgs) error {
 		return err
 	}
 	// イベントを作成
-	_, err = tx.Exec("INSERT INTO events (id, room_id, name, amount, event_type, event_at) VALUES (?, ?, ?, ?, ?)", args.Id, args.RoomID, args.Name, args.Amount, args.EventType, args.EventAt)
+	_, err = tx.Exec("INSERT INTO events (id, room_id, name, amount, event_type, event_at) VALUES (?, ?, ?, ?, ?)", args.Id, args.RoomId, args.Name, args.Amount, args.EventType, args.EventAt)
 	if err != nil {
 		return err
 	}
