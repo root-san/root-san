@@ -31,8 +31,8 @@ type CreateEventArgs struct {
 type Transaction struct {
 	Id       uuid.UUID `db:"id"`
 	Amount   int       `db:"amount"`
-	Payer    string    `db:"payer"`
-	Receiver string    `db:"receiver"`
+	Payer    uuid.UUID `db:"payer"`
+	Receiver uuid.UUID `db:"receiver"`
 }
 
 type UpdateEventArgs struct {
