@@ -1,14 +1,16 @@
 package parser
 
 import (
+	"github.com/google/uuid"
 	"github.com/root-san/root-san/app/repository"
 	"github.com/root-san/root-san/gen/api"
 )
 
 // ParseAddEventJSONRequestBody parses the request body of the AddEvent endpoint
-func ParseAddEventJSONRequestBody(body api.AddEventJSONRequestBody, roomId string) *repository.CreateEventArgs {
+func ParseAddEventJSONRequestBody(body api.AddEventJSONRequestBody, roomId uuid.UUID) *repository.CreateEventArgs {
 	args := repository.CreateEventArgs{
 		Id:     body.Id,
+		RoomId: roomId,
 		Name:   body.Name,
 		Amount: body.Amount,
 		EventType: string(body.EventType),

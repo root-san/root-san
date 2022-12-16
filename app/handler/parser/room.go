@@ -1,6 +1,7 @@
 package parser
 
 import (
+	"github.com/google/uuid"
 	"github.com/root-san/root-san/app/repository"
 	"github.com/root-san/root-san/gen/api"
 )
@@ -15,7 +16,7 @@ func ParseCreateRoomJSONRequestBody(body api.CreateRoomJSONRequestBody) *reposit
 }
 
 // ParseAddMemberJSONRequestBody parses the request body of the AddMember endpoint
-func ParseAddMemberJSONRequestBody(body api.AddMemberJSONRequestBody, roomId string) *repository.CreateMemberArgs {
+func ParseAddMemberJSONRequestBody(body api.AddMemberJSONRequestBody, roomId uuid.UUID) *repository.CreateMemberArgs {
 	args := repository.CreateMemberArgs{
 		Id:     body.Id,
 		RoomId: roomId,
