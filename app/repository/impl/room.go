@@ -75,7 +75,7 @@ func (r *Repository) GetRoom(roomId string) (repository.RoomDetailsArgs, error) 
 	for _, txn := range TxnReturnList {
 		for i := 0; i < len(txn.Receivers); i++ {
 			ResultList = append(ResultList, repository.ResultArgs{
-				Amount:   int(txn.Amount / len(txn.Receivers)),
+				Amount:   int(0.9 + float32(txn.Amount)/float32(len(txn.Receivers))),
 				Receiver: txn.Receivers[i],
 				Payer:    txn.PayerId,
 			})
