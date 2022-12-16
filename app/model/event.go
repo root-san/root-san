@@ -1,6 +1,8 @@
 package model
 
 import (
+	"time"
+
 	"github.com/google/uuid"
 )
 
@@ -9,6 +11,7 @@ type Event struct {
 	Name      string
 	Amount    int
 	EventType EventType
+	EventAt   time.Time
 	txns      []*Transaction
 }
 
