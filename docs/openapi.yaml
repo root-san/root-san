@@ -270,7 +270,7 @@ components:
       type: object
       properties:
         amount:
-          type: number
+          type: integer
         receiver:
           type: string
           format: uuid
@@ -289,7 +289,7 @@ components:
       type: object
       properties:
         amount:
-          type: number
+          type: integer
         receiver:
           type: string
           format: uuid
