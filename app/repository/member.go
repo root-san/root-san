@@ -6,7 +6,7 @@ import (
 
 type MemberRepository interface {
 	// DeleteMember
-	DeleteMember(roomId string, memberId string) error
+	DeleteMember(roomId uuid.UUID, memberId uuid.UUID) error
 	// AddMember
 	CreateMember(args *CreateMemberArgs) error
 }
@@ -15,7 +15,7 @@ type CreateMemberArgs struct {
 	// MemberId
 	Id uuid.UUID
 	// RoomId
-	RoomId string
+	RoomId uuid.UUID
 	// MemberName
 	Name string
 }
