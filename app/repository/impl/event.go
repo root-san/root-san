@@ -5,18 +5,18 @@ import (
 	"github.com/root-san/root-san/app/repository"
 )
 
-func CreateEvent(args *repository.CreateEventArgs) error {
+func (r *Repository) CreateEvent(args *repository.CreateEventArgs) error {
 	return nil
 }
 
-func GetEvent(eventId string) (*model.Event, error) {
+func (r *Repository) GetEvent(eventId string) (*model.Event, error) {
 	return nil, nil
 }
 
-func UpdateEvent(args *repository.UpdateEventArgs) error {
+func (r *Repository) UpdateEvent(args *repository.UpdateEventArgs) error {
 	return nil
 }
 
-func DeleteEvent(eventId string) error {
+func (r *Repository) DeleteEvent(eventId string) error {
 	return nil
 }
