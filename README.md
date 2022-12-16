@@ -77,3 +77,27 @@ curl -XDELETE \
 -H "Content-Type:application/json" \
 localhost:8080/rooms/c3cf4b9a-7316-4a41-bf60-194080cbe682/events/3fa85f64-5717-4562-b3fc-2c963f66afa6
 ```
+
+### PUT /rooms/{roomId}/events/{eventId}
+
+```
+curl -XPUT \
+-H 'Content-Type:application/json' \
+-d '{
+  "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "name": "string",
+  "eventType": "outer",
+  "amount": 0,
+  "eventAt": "2021-05-31T16:27:35+09:00",
+  "txns": [
+    {
+      "amount": 0,
+      "receiver": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+      "payer": "3fa85f64-5717-4562-b3fc-2c963f66afa7",
+      "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+    }
+  ]
+}' \
+localhost:8080/rooms/c3cf4b9a-7316-4a41-bf60-194080cbe682/events/3fa85f64-5717-4562-b3fc-2c963f66afa6
+```
+
