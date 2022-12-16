@@ -16,7 +16,7 @@ type Member struct {
 	Name string
 }
 
-type RoomDetail struct {
+type RoomDetails struct {
 	Id        uuid.UUID
 	Name      string
 	CreatedAt time.Time
@@ -24,14 +24,20 @@ type RoomDetail struct {
 	Events    []*Event
 }
 
-func NewRoomDetails(room *Room, members []*Member, events []*Event) *RoomDetail {
-	return &RoomDetail{
+func NewRoomDetails(room *Room, members []*Member, events []*Event) *RoomDetails {
+	return &RoomDetails{
 		Id:        room.Id,
 		Name:      room.Name,
 		CreatedAt: room.CreatedAt,
 		Members:   members,
 		Events:    events,
 	}
+}
+
+func (r *RoomDetails) Results() []*Result {
+	var results []*Result
+	// TODO: ここに計算ロジックを書く
+	return results
 }
 
 type Result struct {
