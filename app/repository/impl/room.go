@@ -17,22 +17,22 @@ func (r *Repository) CreateRoom(args *repository.CreateRoomArgs) error {
 }
 
 func (r *Repository) GetRoom(roomId uuid.UUID) (*model.Room, error) {
-	var room Room
-	err := r.db.Get(&room, "SELECT * FROM rooms WHERE id = ?", roomId)
+	var row room
+	err := r.db.Get(&row, "SELECT * FROM rooms WHERE id = ?", roomId)
 	if err != nil {
 		return nil, err
 	}
 	return &model.Room{
-		Id:        room.id,
-		Name:      room.name,
-		CreatedAt: room.createdAt,
+		Id:        row.Id,
+		Name:      row.Name,
+		CreatedAt: row.CreatedAt,
 	}, nil
 }
 
-type Room struct {
-	id        uuid.UUID `db:"id"`
-	name      string    `db:"name"`
-	createdAt time.Time `db:"created_at"`
+type room struct {
+	Id        uuid.UUID `db:"id"`
+	Name      string    `db:"name"`
+	CreatedAt time.Time `db:"created_at"`
 }
 
 func (r *Repository) GetRoomMembers(roomId uuid.UUID) ([]*model.Member, error) {
@@ -56,7 +56,7 @@ func (r *Repository) GetRoomMembers(roomId uuid.UUID) ([]*model.Member, error) {
 }
 
 type Member struct {
-	Id        uuid.UUID `db:"id"`
+	Id        uuid.UUID `db:"member_id"`
 	RoomId    uuid.UUID `db:"room_id"`
 	Name      string    `db:"name"`
 	CreatedAt time.Time `db:"created_at"`
