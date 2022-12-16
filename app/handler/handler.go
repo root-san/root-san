@@ -44,7 +44,7 @@ func (s *Server) AddMember(ec echo.Context, roomId string) error {
 		return catch(ec, err)
 	}
 	arg := parser.ParseAddMemberJSONRequestBody(req, roomId)
-	if err := s.Repo.AddMember(arg); err != nil {
+	if err := s.Repo.CreateMember(arg); err != nil {
 		return catch(ec, err)
 	}
 	return ec.JSON(http.StatusOK, api.AddMemberJSONBody{
