@@ -92,6 +92,18 @@ func (s *Server) DeleteEvent(ctx echo.Context, roomId openapi_types.UUID, eventI
 
 // edit event of room
 // (PUT /rooms/{roomId}/event/{eventId})
-func (s *Server) EditEvent(ctx echo.Context, roomId string, eventId string) error {
-	return nil
+func (s *Server) EditEvent(ctx echo.Context, roomId openapi_types.UUID, eventId openapi_types.UUID) error {
+	req := api.EditEventJSONRequestBody{}
+	if err := ctx.Bind(&req); err != nil {
+		return catch(ctx, err)
+	}
+	arg := parser.ParseEditEventJSONRequestBody(req, eventId)
+	if err := s.Repo.UpdateEvent(arg); err != nil {
+		return catch(ctx, err)
+	}
+	event, err := s.Repo.GetEvent(arg.Id)
+	if err != nil {
+		return catch(ctx, err)
+	}
+	return ctx.JSON(http.StatusOK, parser.Model{}.Event(event))
 }
