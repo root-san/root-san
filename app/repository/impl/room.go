@@ -17,3 +17,11 @@ func (r *Repository) CreateRoom(args *repository.CreateRoomArgs) error {
 func (r *Repository) GetRoom(roomId uuid.UUID) (*model.Room, error) {
 	return nil, nil
 }
+
+func (r *Repository) GetRoomMembers(roomId uuid.UUID) ([]*model.Member, error) {
+	return nil, nil
+}
+
+func (r *Repository) GetRoomEvents(roomId uuid.UUID) ([]*model.Event, error) {
+	return nil, nil
+}
