@@ -271,8 +271,6 @@ components:
       properties:
         amount:
           type: number
-        description:
-          type: string
         receiver:
           type: string
           format: uuid
@@ -284,7 +282,6 @@ components:
           format: uuid
       required:
         - amount
-        - description
         - receiver
         - payer
         - id
