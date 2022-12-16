@@ -79,9 +79,9 @@ paths:
         '204':
           description: No content
       operationId: deleteMember
-  /rooms/{roomId}/txn:
+  /rooms/{roomId}/event:
     post:
-      summary: add txn to room
+      summary: add event to room
       parameters:
         - name: roomId
           in: path
@@ -92,25 +92,25 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/TxnRequestBody'
+              $ref: '#/components/schemas/EventRequestBody'
       responses:
         '200':
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Txn'
-      operationId: addTransaction
-  /rooms/{roomId}/txn/{txnId}:
+                $ref: '#/components/schemas/Event'
+      operationId: addEvent
+  /rooms/{roomId}/event/{eventId}:
     put:
-      summary: edit txn of room
+      summary: edit event of room
       parameters:
         - name: roomId
           in: path
           required: true
           schema:
             type: string
-        - name: txnId
+        - name: eventId
           in: path
           required: true
           schema:
@@ -119,24 +119,24 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/TxnRequestBody'
+              $ref: '#/components/schemas/EventRequestBody'
       responses:
         '200':
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Txn'
-      operationId: editTransaction
+                $ref: '#/components/schemas/Event'
+      operationId: editEvent
     delete:
-      summary: delete txn from room
+      summary: delete event from room
       parameters:
         - name: roomId
           in: path
           required: true
           schema:
             type: string
-        - name: txnId
+        - name: eventId
           in: path
           required: true
           schema:
@@ -144,7 +144,7 @@ paths:
       responses:
         '204':
           description: No content
-      operationId: deleteTransaction
+      operationId: deleteEvent
 components:
   schemas:
     Room:
@@ -170,10 +170,10 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Member'
-        txns:
+        events:
           type: array
           items:
-            $ref: '#/components/schemas/Txn'
+            $ref: '#/components/schemas/Event'
         results:
           type: array
           items:
@@ -199,71 +199,100 @@ components:
       required:
         - id
         - name
-    TxnRequestBody:
+    EventRequestBody:
       type: object
       properties:
-        amount:
-          type: integer
-        description:
-          type: string
-        receivers:
-          type: array
-          items:
-            type: string
-            format: uuid
-        payer:
-          type: string
-          format: uuid
         id:
           type: string
           format: uuid
-        paidAt:
+        name:
+          type: string
+        eventType:
+          $ref: "#/components/schemas/eventType"
+        amount:
+          type: integer
+          description: "支払い合計金額"
+        eventAt:
           type: string
           format: date-time
+          description: "イベント発生日時"
+        txns:
+          type: array
+          items:
+            $ref: "#/components/schemas/Txn"
+          description: "そのイベント内における人同士のお金のやり取り"
       required:
-        - amount
-        - description
-        - receivers
-        - payer
         - id
-        - paidAt
-    Txn:
+        - name
+        - eventType
+        - amount
+        - eventAt
+        - txns
+    eventType:
+      type: string
+      enum:
+        - outer
+        - inner
+    Event:
       type: object
       properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        eventType:
+          $ref: "#/components/schemas/eventType"
+        amount:
+          type: integer
+          description: "支払い合計金額"
+        eventAt:
+          type: string
+          format: date-time
+          description: "イベント発生日時"
+        txns:
+          type: array
+          items:
+            $ref: "#/components/schemas/Txn"
+          description: "そのイベント内における人同士のお金のやり取り"
         createdAt:
           type: string
           format: date-time
+      required:
+        - id
+        - name
+        - eventType
+        - amount
+        - eventAt
+        - txns
+        - createdAt
+    Txn:
+      type: object
+      properties:
         amount:
-          type: integer
+          type: number
         description:
           type: string
-        receivers:
-          type: array
-          items:
-            type: string
-            format: uuid
+        receiver:
+          type: string
+          format: uuid
         payer:
           type: string
           format: uuid
         id:
           type: string
           format: uuid
-        paidAt:
-          type: string
-          format: date-time
       required:
-        - createdAt
         - amount
         - description
-        - receivers
+        - receiver
         - payer
         - id
-        - paidAt
     Result:
       type: object
       properties:
         amount:
-          type: integer
+          type: number
         receiver:
           type: string
           format: uuid
