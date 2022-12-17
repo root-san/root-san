@@ -1,8 +1,9 @@
 package model
 
 import (
-	"github.com/google/uuid"
 	"time"
+
+	"github.com/google/uuid"
 )
 
 type Room struct {
@@ -36,7 +37,34 @@ func NewRoomDetails(room *Room, members []*Member, events []*Event) *RoomDetails
 
 func (r *RoomDetails) Results() []*Result {
 	var results []*Result
-	// TODO: ここに計算ロジックを書く
+	for _, event := range r.Events {
+		for _, txn := range event.Txns {
+			for _, result := range results {
+				if result.Payer == txn.Payer {
+					if result.Receiver == txn.Receiver {
+						result.Amount += txn.Amount
+						continue
+					}
+				} else if result.Payer == txn.Receiver {
+					if result.Receiver == txn.Payer {
+						result.Amount -= txn.Amount
+						continue
+					}
+				}
+			}
+			results = append(results, &Result{
+				Amount:   txn.Amount,
+				Payer:    txn.Payer,
+				Receiver: txn.Receiver,
+			})
+			for _, result := range results {
+				if result.Amount < 0 {
+					result.Amount *= -1
+					result.Payer, result.Receiver = result.Receiver, result.Payer
+				}
+			}
+		}
+	}
 	return results
 }
 
