@@ -4,8 +4,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/google/uuid"
 	"github.com/google/go-cmp/cmp"
+	"github.com/google/uuid"
 )
 
 func TestResult(t *testing.T) {
@@ -16,7 +16,7 @@ func TestResult(t *testing.T) {
 
 	time1 := time.Now()
 
-	tests := []struct{
+	tests := []struct {
 		name string
 		room *RoomDetails
 		want []*Result
@@ -31,15 +31,15 @@ func TestResult(t *testing.T) {
 			room: &RoomDetails{
 				Events: []*Event{
 					{
-						Id: uid1,
-						Name: "event1",
+						Id:        uid1,
+						Name:      "event1",
 						EventType: EventTypeOuter,
-						EventAt: time1,
+						EventAt:   time1,
 						Txns: []*Transaction{
 							{
-								Id: uid2,
-								Amount: 100,
-								Payer: uid1,
+								Id:       uid2,
+								Amount:   100,
+								Payer:    uid1,
 								Receiver: uid2,
 							},
 						},
@@ -49,8 +49,8 @@ func TestResult(t *testing.T) {
 			},
 			want: []*Result{
 				{
-					Amount: 100,
-					Payer: uid1,
+					Amount:   100,
+					Payer:    uid1,
 					Receiver: uid2,
 				},
 			},
