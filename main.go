@@ -6,11 +6,11 @@ import (
 	"os"
 	"time"
 
-	"github.com/root-san/root-san/app/handler"
-	"github.com/root-san/root-san/app/repository/impl"
 	"github.com/jmoiron/sqlx"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
+	"github.com/root-san/root-san/app/handler"
+	"github.com/root-san/root-san/app/repository/impl"
 	"github.com/root-san/root-san/gen/api"
 )
 
@@ -49,11 +49,11 @@ func main() {
 func getDSN() string {
 	return fmt.Sprintf(
 		"%s:%s@tcp(%s:%s)/%s?parseTime=True&loc=Asia%%2FTokyo&charset=utf8mb4",
-		getEnvOrDefault("DB_USER", "root"),
-		getEnvOrDefault("DB_PASS", "password"),
-		getEnvOrDefault("DB_HOST", "db"),
-		getEnvOrDefault("DB_PORT", "3306"),
-		getEnvOrDefault("DB_NAME", "root_san"),
+		getEnvOrDefault("MARIADB_USERNAME", "root"),
+		getEnvOrDefault("MARIADB_PASSWORD", "password"),
+		getEnvOrDefault("MARIADB_HOSTNAME", "db"),
+		getEnvOrDefault("MARIADB_PORT", "3306"),
+		getEnvOrDefault("MARIADB_DATABASE", "root_san"),
 	)
 }
 
