@@ -69,3 +69,12 @@ func (m Model) RoomDetail(r *model.RoomDetails) *api.RoomDetails {
 	}
 	return res
 }
+
+// ParseEditRoomJSONRequestBody parses the request body of the EditRoom endpoint
+func ParseEditRoomJSONRequestBody(body api.EditRoomJSONRequestBody, roomId uuid.UUID) *repository.UpdateRoomArgs {
+	args := repository.UpdateRoomArgs{
+		Id:   roomId,
+		Name: body.Name,
+	}
+	return &args
+}

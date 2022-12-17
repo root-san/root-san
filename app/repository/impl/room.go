@@ -109,3 +109,19 @@ func (r *Repository) GetRoomEvents(roomId uuid.UUID) ([]*model.Event, error) {
 
 	return events, nil
 }
+
+func (r *Repository) UpdateRoom(args *repository.UpdateRoomArgs) error {
+	_, err := r.db.Exec("UPDATE rooms SET name = ? WHERE id = ?", args.Name, args.Id)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (r *Repository) DeleteRoom(roomId uuid.UUID) error {
+	_, err := r.db.Exec("DELETE FROM rooms WHERE id = ?", roomId)
+	if err != nil {
+		return err
+	}
+	return nil
+}

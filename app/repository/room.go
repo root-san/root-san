@@ -10,13 +10,18 @@ type RoomRepository interface {
 	CreateRoom(args *CreateRoomArgs) error
 	// GetRoom
 	GetRoom(roomId uuid.UUID) (*model.Room, error)
+	UpdateRoom(args *UpdateRoomArgs) error
+	DeleteRoom(roomId uuid.UUID) error
 	GetRoomMembers(roomId uuid.UUID) ([]*model.Member, error)
 	GetRoomEvents(roomId uuid.UUID) ([]*model.Event, error)
 }
 
 type CreateRoomArgs struct {
-	// MemberId
 	Id uuid.UUID
-	// RoomName
+	Name string
+}
+
+type UpdateRoomArgs struct {
+	Id uuid.UUID
 	Name string
 }

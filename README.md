@@ -31,6 +31,21 @@ make gen-api
 curl -XPOST -H "Content-Type:application/json" -d '{"id": "c3cf4b9a-7316-4a41-bf60-194080cbe682", "name": "hoghoge"}' localhost:8080/rooms
 ```
 
+### PUT /rooms/{roomId}
+
+```
+curl -XPUT \
+-H "Content-Type:application/json" \
+-d '{"name": "gehohoge"}' localhost:8080/rooms/c3cf4b9a-7316-4a41-bf60-194080cbe682
+```
+
+### DELETE /rooms/{roomId}
+
+```
+curl -XDELETE \
+localhost:8080/rooms/c3cf4b9a-7316-4a41-bf60-194080cbe682
+```
+
 ### POST /rooms/{roomId}/members
 
 ```

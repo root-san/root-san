@@ -17,16 +17,16 @@ type Server struct {
 
 // create room
 // (POST /rooms)
-func (s *Server) CreateRoom(ec echo.Context) error {
+func (s *Server) CreateRoom(ctx echo.Context) error {
 	req := api.CreateRoomJSONRequestBody{}
-	if err := ec.Bind(&req); err != nil {
-		return catch(ec, err)
+	if err := ctx.Bind(&req); err != nil {
+		return catch(ctx, err)
 	}
 	args := parser.ParseCreateRoomJSONRequestBody(req)
 	if err := s.Repo.CreateRoom(args); err != nil {
-		return catch(ec, err)
+		return catch(ctx, err)
 	}
-	return ec.JSON(http.StatusOK, api.CreateRoomJSONBody{
+	return ctx.JSON(http.StatusOK, api.Room{
 		Id:   req.Id,
 		Name: req.Name,
 	})
@@ -34,35 +34,61 @@ func (s *Server) CreateRoom(ec echo.Context) error {
 
 // get room
 // (GET /rooms/{roomId})
-func (s *Server) GetRoom(ec echo.Context, roomId openapi_types.UUID) error {
+func (s *Server) GetRoom(ctx echo.Context, roomId openapi_types.UUID) error {
 	room, err := s.Repo.GetRoom(roomId)
 	if err != nil {
-		return catch(ec, err)
+		return catch(ctx, err)
 	}
 	members, err := s.Repo.GetRoomMembers(roomId)
 	if err != nil {
-		return catch(ec, err)
+		return catch(ctx, err)
 	}
 	events, err := s.Repo.GetRoomEvents(roomId)
 	if err != nil {
-		return catch(ec, err)
+		return catch(ctx, err)
 	}
 	r := model.NewRoomDetails(room, members, events)
-	return ec.JSON(http.StatusOK, parser.Model{}.RoomDetail(r))
+	return ctx.JSON(http.StatusOK, parser.Model{}.RoomDetail(r))
+}
+
+// edit room
+// (PUT /rooms/{roomId})
+func (s *Server) EditRoom(ctx echo.Context, roomId openapi_types.UUID) error {
+	req := api.EditRoomJSONRequestBody{}
+	if err := ctx.Bind(&req); err != nil {
+		return catch(ctx, err)
+	}
+	arg := parser.ParseEditRoomJSONRequestBody(req, roomId)
+	if err := s.Repo.UpdateRoom(arg); err != nil {
+		return catch(ctx, err)
+	}
+	return ctx.JSON(http.StatusOK, api.Room{
+		Id:   roomId,
+		Name: req.Name,
+	})
+}
+
+// delete room
+// (DELETE /rooms/{roomId})
+func (s *Server) DeleteRoom(ctx echo.Context, roomId openapi_types.UUID) error {
+	if err := s.Repo.DeleteRoom(roomId); err != nil {
+		return catch(ctx, err)
+	}
+	return ctx.NoContent(http.StatusNoContent)
 }
 
 // add member to room
 // (POST /rooms/{roomId}/members)
-func (s *Server) AddMember(ec echo.Context, roomId openapi_types.UUID) error {
+func (s *Server) AddMember(ctx echo.Context, roomId openapi_types.UUID) error {
 	req := api.AddMemberJSONRequestBody{}
-	if err := ec.Bind(&req); err != nil {
-		return catch(ec, err)
+	if err := ctx.Bind(&req); err != nil {
+		return catch(ctx, err)
 	}
 	arg := parser.ParseAddMemberJSONRequestBody(req, roomId)
 	if err := s.Repo.CreateMember(arg); err != nil {
-		return catch(ec, err)
+		return catch(ctx, err)
 	}
-	return ec.JSON(http.StatusOK, api.AddMemberJSONBody{
+	return ctx.JSON(http.StatusOK, api.AddMemberJSONBody{
 		Id:   req.Id,
 		Name: req.Name,
 	})
@@ -70,11 +96,11 @@ func (s *Server) AddMember(ec echo.Context, roomId openapi_types.UUID) error {
 
 // delete member from room
 // (DELETE /rooms/{roomId}/members/{memberId})
-func (s *Server) DeleteMember(ec echo.Context, roomId openapi_types.UUID, memberId openapi_types.UUID) error {
+func (s *Server) DeleteMember(ctx echo.Context, roomId openapi_types.UUID, memberId openapi_types.UUID) error {
 	if err := s.Repo.DeleteMember(roomId, memberId); err != nil {
-		return catch(ec, err)
+		return catch(ctx, err)
 	}
-	return ec.NoContent(http.StatusNoContent)
+	return ctx.NoContent(http.StatusNoContent)
 }
 
 // add event to room
