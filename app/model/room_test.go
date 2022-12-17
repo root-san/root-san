@@ -18,7 +18,7 @@ func TestResult(t *testing.T) {
 	uid4 := uuid.New()
 	uid5 := uuid.New()
 	uid6 := uuid.New()
-	// uid7 := uuid.New()
+	uid7 := uuid.New()
 	// uid8 := uuid.New()
 	// uid9 := uuid.New()
 
@@ -29,23 +29,650 @@ func TestResult(t *testing.T) {
 		room *RoomDetails
 		want []*Result
 	}{
+		// {
+		// 	name: "empty case",
+		// 	room: &RoomDetails{},
+		// 	want: nil,
+		// },
+		// {
+		// 	name: "one event",
+		// 	room: &RoomDetails{
+		// 		Events: []*Event{
+		// 			{
+		// 				Id:        uid1,
+		// 				Name:      "event1",
+		// 				EventType: EventTypeOuter,
+		// 				EventAt:   time1,
+		// 				Txns: []*Transaction{
+		// 					{
+		// 						Id:       uid2,
+		// 						Amount:   100,
+		// 						Payer:    uid1,
+		// 						Receiver: uid2,
+		// 					},
+		// 				},
+		// 				CreatedAt: time1,
+		// 			},
+		// 		},
+		// 	},
+		// 	want: []*Result{
+		// 		{
+		// 			Amount:   100,
+		// 			Payer:    uid1,
+		// 			Receiver: uid2,
+		// 		},
+		// 	},
+		// },
+		// {
+		// 	name: "two events",
+		// 	room: &RoomDetails{
+		// 		Events: []*Event{
+		// 			{
+		// 				Id:        uid1,
+		// 				Name:      "event1",
+		// 				EventType: EventTypeOuter,
+		// 				EventAt:   time1,
+		// 				Txns: []*Transaction{
+		// 					{
+		// 						Id:       uid2,
+		// 						Amount:   100,
+		// 						Payer:    uid1,
+		// 						Receiver: uid2,
+		// 					},
+		// 				},
+		// 				CreatedAt: time1,
+		// 			},
+		// 			{
+		// 				Id:        uid1,
+		// 				Name:      "event2",
+		// 				EventType: EventTypeOuter,
+		// 				EventAt:   time1,
+		// 				Txns: []*Transaction{
+		// 					{
+		// 						Id:       uid2,
+		// 						Amount:   100,
+		// 						Payer:    uid1,
+		// 						Receiver: uid2,
+		// 					},
+		// 				},
+		// 				CreatedAt: time1,
+		// 			},
+		// 		},
+		// 	},
+		// 	want: []*Result{
+		// 		{
+		// 			Amount:   200,
+		// 			Payer:    uid1,
+		// 			Receiver: uid2,
+		// 		},
+		// 	},
+		// },
+		// {
+		// 	name: "two events with different payer",
+		// 	room: &RoomDetails{
+		// 		Events: []*Event{
+		// 			{
+		// 				Id:        uid1,
+		// 				Name:      "event1",
+		// 				EventType: EventTypeOuter,
+		// 				EventAt:   time1,
+		// 				Txns: []*Transaction{
+		// 					{
+		// 						Id:       uid2,
+		// 						Amount:   100,
+		// 						Payer:    uid1,
+		// 						Receiver: uid2,
+		// 					},
+		// 				},
+		// 				CreatedAt: time1,
+		// 			},
+		// 			{
+		// 				Id:        uid1,
+		// 				Name:      "event2",
+		// 				EventType: EventTypeOuter,
+		// 				EventAt:   time1,
+		// 				Txns: []*Transaction{
+		// 					{
+		// 						Id:       uid2,
+		// 						Amount:   100,
+		// 						Payer:    uid2,
+		// 						Receiver: uid1,
+		// 					},
+		// 				},
+		// 				CreatedAt: time1,
+		// 			},
+		// 		},
+		// 	},
+		// 	want: nil,
+		// },
+		// {
+		// 	name: "two events with different receiver",
+		// 	room: &RoomDetails{
+		// 		Events: []*Event{
+		// 			{
+		// 				Id:        uid1,
+		// 				Name:      "event1",
+		// 				EventType: EventTypeOuter,
+		// 				EventAt:   time1,
+		// 				Txns: []*Transaction{
+		// 					{
+		// 						Id:       uid2,
+		// 						Amount:   100,
+		// 						Payer:    uid1,
+		// 						Receiver: uid2,
+		// 					},
+		// 				},
+		// 				CreatedAt: time1,
+		// 			},
+		// 			{
+		// 				Id:        uid1,
+		// 				Name:      "event2",
+		// 				EventType: EventTypeOuter,
+		// 				EventAt:   time1,
+		// 				Txns: []*Transaction{
+		// 					{
+		// 						Id:       uid2,
+		// 						Amount:   100,
+		// 						Payer:    uid1,
+		// 						Receiver: uid3,
+		// 					},
+		// 				},
+		// 				CreatedAt: time1,
+		// 			},
+		// 		},
+		// 	},
+		// 	want: []*Result{
+		// 		{
+		// 			Amount:   100,
+		// 			Payer:    uid1,
+		// 			Receiver: uid2,
+		// 		}, {
+		// 			Amount:   100,
+		// 			Payer:    uid1,
+		// 			Receiver: uid3,
+		// 		},
+		// 	},
+		// },
+		// {
+		// 	name: "two events with different amount",
+		// 	room: &RoomDetails{
+		// 		Events: []*Event{
+		// 			{
+		// 				Id:        uid1,
+		// 				Name:      "event1",
+		// 				EventType: EventTypeOuter,
+		// 				EventAt:   time1,
+		// 				Txns: []*Transaction{
+		// 					{
+		// 						Id:       uid2,
+		// 						Amount:   100,
+		// 						Payer:    uid1,
+		// 						Receiver: uid2,
+		// 					},
+		// 				},
+		// 				CreatedAt: time1,
+		// 			},
+		// 			{
+		// 				Id:        uid1,
+		// 				Name:      "event2",
+		// 				EventType: EventTypeOuter,
+		// 				EventAt:   time1,
+		// 				Txns: []*Transaction{
+		// 					{
+		// 						Id:       uid2,
+		// 						Amount:   200,
+		// 						Payer:    uid1,
+		// 						Receiver: uid2,
+		// 					},
+		// 				},
+		// 				CreatedAt: time1,
+		// 			},
+		// 		},
+		// 	},
+		// 	want: []*Result{
+		// 		{
+		// 			Amount:   300,
+		// 			Payer:    uid1,
+		// 			Receiver: uid2,
+		// 		},
+		// 	},
+		// },
+		// {
+		// 	name: "two events with different payer",
+		// 	room: &RoomDetails{
+		// 		Events: []*Event{
+		// 			{
+		// 				Id:        uid1,
+		// 				Name:      "event1",
+		// 				EventType: EventTypeOuter,
+		// 				EventAt:   time1,
+		// 				Txns: []*Transaction{
+		// 					{
+		// 						Id:       uid2,
+		// 						Amount:   100,
+		// 						Payer:    uid1,
+		// 						Receiver: uid2,
+		// 					},
+		// 				},
+		// 				CreatedAt: time1,
+		// 			},
+		// 			{
+		// 				Id:        uid1,
+		// 				Name:      "event2",
+		// 				EventType: EventTypeOuter,
+		// 				EventAt:   time1,
+		// 				Txns: []*Transaction{
+		// 					{
+		// 						Id:       uid2,
+		// 						Amount:   100,
+		// 						Payer:    uid3,
+		// 						Receiver: uid2,
+		// 					},
+		// 				},
+		// 				CreatedAt: time1,
+		// 			},
+		// 		},
+		// 	},
+		// 	want: []*Result{
+		// 		{
+		// 			Amount:   100,
+		// 			Payer:    uid1,
+		// 			Receiver: uid2,
+		// 		}, {
+		// 			Amount:   100,
+		// 			Payer:    uid3,
+		// 			Receiver: uid2,
+		// 		},
+		// 	},
+		// },
+		// {
+		// 	name: "three events with same payer and receiver",
+		// 	room: &RoomDetails{
+		// 		Events: []*Event{
+		// 			{
+		// 				Id:        uid1,
+		// 				Name:      "event1",
+		// 				EventType: EventTypeOuter,
+		// 				EventAt:   time1,
+		// 				Txns: []*Transaction{
+		// 					{
+		// 						Id:       uid2,
+		// 						Amount:   100,
+		// 						Payer:    uid1,
+		// 						Receiver: uid2,
+		// 					},
+		// 				},
+		// 				CreatedAt: time1,
+		// 			},
+		// 			{
+		// 				Id:        uid1,
+		// 				Name:      "event2",
+		// 				EventType: EventTypeOuter,
+		// 				EventAt:   time1,
+		// 				Txns: []*Transaction{
+		// 					{
+		// 						Id:       uid2,
+		// 						Amount:   100,
+		// 						Payer:    uid1,
+		// 						Receiver: uid2,
+		// 					},
+		// 				},
+		// 				CreatedAt: time1,
+		// 			},
+		// 			{
+		// 				Id:        uid1,
+		// 				Name:      "event3",
+		// 				EventType: EventTypeOuter,
+		// 				EventAt:   time1,
+		// 				Txns: []*Transaction{
+		// 					{
+		// 						Id:       uid2,
+		// 						Amount:   100,
+		// 						Payer:    uid1,
+		// 						Receiver: uid2,
+		// 					},
+		// 				},
+		// 				CreatedAt: time1,
+		// 			},
+		// 		},
+		// 	},
+		// 	want: []*Result{
+		// 		{
+		// 			Amount:   300,
+		// 			Payer:    uid1,
+		// 			Receiver: uid2,
+		// 		},
+		// 	},
+		// },
+		// {
+		// 	name: "three events with same payer and different receivers",
+		// 	room: &RoomDetails{
+		// 		Events: []*Event{
+		// 			{
+		// 				Id:        uid1,
+		// 				Name:      "event1",
+		// 				EventType: EventTypeOuter,
+		// 				EventAt:   time1,
+		// 				Txns: []*Transaction{
+		// 					{
+		// 						Id:       uid2,
+		// 						Amount:   100,
+		// 						Payer:    uid1,
+		// 						Receiver: uid2,
+		// 					},
+		// 				},
+		// 				CreatedAt: time1,
+		// 			},
+		// 			{
+		// 				Id:        uid1,
+		// 				Name:      "event2",
+		// 				EventType: EventTypeOuter,
+		// 				EventAt:   time1,
+		// 				Txns: []*Transaction{
+		// 					{
+		// 						Id:       uid2,
+		// 						Amount:   100,
+		// 						Payer:    uid1,
+		// 						Receiver: uid3,
+		// 					},
+		// 				},
+		// 				CreatedAt: time1,
+		// 			},
+		// 			{
+		// 				Id:        uid1,
+		// 				Name:      "event3",
+		// 				EventType: EventTypeOuter,
+		// 				EventAt:   time1,
+		// 				Txns: []*Transaction{
+		// 					{
+		// 						Id:       uid2,
+		// 						Amount:   100,
+		// 						Payer:    uid1,
+		// 						Receiver: uid4,
+		// 					},
+		// 				},
+		// 				CreatedAt: time1,
+		// 			},
+		// 		},
+		// 	},
+		// 	want: []*Result{
+		// 		{
+		// 			Amount:   100,
+		// 			Payer:    uid1,
+		// 			Receiver: uid2,
+		// 		}, {
+		// 			Amount:   100,
+		// 			Payer:    uid1,
+		// 			Receiver: uid3,
+		// 		}, {
+		// 			Amount:   100,
+		// 			Payer:    uid1,
+		// 			Receiver: uid4,
+		// 		},
+		// 	},
+		// },
+		// {
+		// 	name: "three events with different payers and same receivers",
+		// 	room: &RoomDetails{
+		// 		Events: []*Event{
+		// 			{
+		// 				Id:        uid1,
+		// 				Name:      "event1",
+		// 				EventType: EventTypeOuter,
+		// 				EventAt:   time1,
+		// 				Txns: []*Transaction{
+		// 					{
+		// 						Id:       uid2,
+		// 						Amount:   100,
+		// 						Payer:    uid1,
+		// 						Receiver: uid2,
+		// 					},
+		// 				},
+		// 				CreatedAt: time1,
+		// 			},
+		// 			{
+		// 				Id:        uid1,
+		// 				Name:      "event2",
+		// 				EventType: EventTypeOuter,
+		// 				EventAt:   time1,
+		// 				Txns: []*Transaction{
+		// 					{
+		// 						Id:       uid2,
+		// 						Amount:   100,
+		// 						Payer:    uid3,
+		// 						Receiver: uid2,
+		// 					},
+		// 				},
+		// 				CreatedAt: time1,
+		// 			},
+		// 			{
+		// 				Id:        uid1,
+		// 				Name:      "event3",
+		// 				EventType: EventTypeOuter,
+		// 				EventAt:   time1,
+		// 				Txns: []*Transaction{
+		// 					{
+		// 						Id:       uid2,
+		// 						Amount:   100,
+		// 						Payer:    uid4,
+		// 						Receiver: uid2,
+		// 					},
+		// 				},
+		// 				CreatedAt: time1,
+		// 			},
+		// 		},
+		// 	},
+		// 	want: []*Result{
+		// 		{
+		// 			Amount:   100,
+		// 			Payer:    uid1,
+		// 			Receiver: uid2,
+		// 		}, {
+		// 			Amount:   100,
+		// 			Payer:    uid3,
+		// 			Receiver: uid2,
+		// 		}, {
+		// 			Amount:   100,
+		// 			Payer:    uid4,
+		// 			Receiver: uid2,
+		// 		},
+		// 	},
+		// },
+		// {
+		// 	name: "three events with different payers and different receivers",
+		// 	room: &RoomDetails{
+		// 		Events: []*Event{
+		// 			{
+		// 				Id:        uid1,
+		// 				Name:      "event1",
+		// 				EventType: EventTypeOuter,
+		// 				EventAt:   time1,
+		// 				Txns: []*Transaction{
+		// 					{
+		// 						Id:       uid2,
+		// 						Amount:   100,
+		// 						Payer:    uid1,
+		// 						Receiver: uid2,
+		// 					},
+		// 				},
+		// 				CreatedAt: time1,
+		// 			},
+		// 			{
+		// 				Id:        uid1,
+		// 				Name:      "event2",
+		// 				EventType: EventTypeOuter,
+		// 				EventAt:   time1,
+		// 				Txns: []*Transaction{
+		// 					{
+		// 						Id:       uid2,
+		// 						Amount:   100,
+		// 						Payer:    uid3,
+		// 						Receiver: uid4,
+		// 					},
+		// 				},
+		// 				CreatedAt: time1,
+		// 			},
+		// 			{
+		// 				Id:        uid1,
+		// 				Name:      "event3",
+		// 				EventType: EventTypeOuter,
+		// 				EventAt:   time1,
+		// 				Txns: []*Transaction{
+		// 					{
+		// 						Id:       uid2,
+		// 						Amount:   100,
+		// 						Payer:    uid5,
+		// 						Receiver: uid6,
+		// 					},
+		// 				},
+		// 				CreatedAt: time1,
+		// 			},
+		// 		},
+		// 	},
+		// 	want: []*Result{
+		// 		{
+		// 			Amount:   100,
+		// 			Payer:    uid1,
+		// 			Receiver: uid2,
+		// 		}, {
+		// 			Amount:   100,
+		// 			Payer:    uid3,
+		// 			Receiver: uid4,
+		// 		}, {
+		// 			Amount:   100,
+		// 			Payer:    uid5,
+		// 			Receiver: uid6,
+		// 		},
+		// 	},
+		// },
+		// {
+		// 	name: "three events with different payers and different receivers in three members",
+		// 	room: &RoomDetails{
+		// 		Events: []*Event{
+		// 			{
+		// 				Id:        uid1,
+		// 				Name:      "event1",
+		// 				EventType: EventTypeOuter,
+		// 				EventAt:   time1,
+		// 				Txns: []*Transaction{
+		// 					{
+		// 						Id:       uid2,
+		// 						Amount:   100,
+		// 						Payer:    uid1,
+		// 						Receiver: uid2,
+		// 					},
+		// 				},
+		// 				CreatedAt: time1,
+		// 			},
+		// 			{
+		// 				Id:        uid1,
+		// 				Name:      "event2",
+		// 				EventType: EventTypeOuter,
+		// 				EventAt:   time1,
+		// 				Txns: []*Transaction{
+		// 					{
+		// 						Id:       uid2,
+		// 						Amount:   100,
+		// 						Payer:    uid2,
+		// 						Receiver: uid3,
+		// 					},
+		// 				},
+		// 				CreatedAt: time1,
+		// 			},
+		// 			{
+		// 				Id:        uid1,
+		// 				Name:      "event3",
+		// 				EventType: EventTypeOuter,
+		// 				EventAt:   time1,
+		// 				Txns: []*Transaction{
+		// 					{
+		// 						Id:       uid2,
+		// 						Amount:   100,
+		// 						Payer:    uid3,
+		// 						Receiver: uid1,
+		// 					},
+		// 				},
+		// 				CreatedAt: time1,
+		// 			},
+		// 		},
+		// 	},
+		// 	want: nil,
+		// },
+		// {
+		// 	name: "three events with different payers and different receivers in three members part 2",
+		// 	room: &RoomDetails{
+		// 		Events: []*Event{
+		// 			{
+		// 				Id:        uid5,
+		// 				Name:      "event1",
+		// 				EventType: EventTypeOuter,
+		// 				EventAt:   time1,
+		// 				Txns: []*Transaction{
+		// 					{
+		// 						Id:       uid4,
+		// 						Amount:   100,
+		// 						Payer:    uid1,
+		// 						Receiver: uid2,
+		// 					},
+		// 				},
+		// 				CreatedAt: time1,
+		// 			},
+		// 			{
+		// 				Id:        uid6,
+		// 				Name:      "event2",
+		// 				EventType: EventTypeOuter,
+		// 				EventAt:   time1,
+		// 				Txns: []*Transaction{
+		// 					{
+		// 						Id:       uid7,
+		// 						Amount:   200,
+		// 						Payer:    uid2,
+		// 						Receiver: uid3,
+		// 					},
+		// 				},
+		// 				CreatedAt: time1,
+		// 			},
+		// 			{
+		// 				Id:        uid9,
+		// 				Name:      "event3",
+		// 				EventType: EventTypeOuter,
+		// 				EventAt:   time1,
+		// 				Txns: []*Transaction{
+		// 					{
+		// 						Id:       uid8,
+		// 						Amount:   300,
+		// 						Payer:    uid3,
+		// 						Receiver: uid1,
+		// 					},
+		// 				},
+		// 				CreatedAt: time1,
+		// 			},
+		// 		},
+		// 	},
+		// 	want: []*Result{
+		// 		{
+		// 			Amount:   100,
+		// 			Payer:    uid2,
+		// 			Receiver: uid1,
+		// 		}, {
+		// 			Amount:   100,
+		// 			Payer:    uid3,
+		// 			Receiver: uid1,
+		// 		},
+		// 	},
+		// },
 		{
-			name: "empty case",
-			room: &RoomDetails{},
-			want: nil,
-		},
-		{
-			name: "one event",
+			name: "two events with different payers and different receivers in three members",
 			room: &RoomDetails{
 				Events: []*Event{
 					{
-						Id:        uid1,
+						Id:        uid5,
 						Name:      "event1",
 						EventType: EventTypeOuter,
 						EventAt:   time1,
 						Txns: []*Transaction{
 							{
-								Id:       uid2,
+								Id:       uid4,
 								Amount:   100,
 								Payer:    uid1,
 								Receiver: uid2,
@@ -53,46 +680,17 @@ func TestResult(t *testing.T) {
 						},
 						CreatedAt: time1,
 					},
-				},
-			},
-			want: []*Result{
-				{
-					Amount:   100,
-					Payer:    uid1,
-					Receiver: uid2,
-				},
-			},
-		},
-		{
-			name: "two events",
-			room: &RoomDetails{
-				Events: []*Event{
 					{
-						Id:        uid1,
-						Name:      "event1",
-						EventType: EventTypeOuter,
-						EventAt:   time1,
-						Txns: []*Transaction{
-							{
-								Id:       uid2,
-								Amount:   100,
-								Payer:    uid1,
-								Receiver: uid2,
-							},
-						},
-						CreatedAt: time1,
-					},
-					{
-						Id:        uid1,
+						Id:        uid6,
 						Name:      "event2",
 						EventType: EventTypeOuter,
 						EventAt:   time1,
 						Txns: []*Transaction{
 							{
-								Id:       uid2,
-								Amount:   100,
-								Payer:    uid1,
-								Receiver: uid2,
+								Id:       uid7,
+								Amount:   300,
+								Payer:    uid2,
+								Receiver: uid3,
 							},
 						},
 						CreatedAt: time1,
@@ -102,501 +700,14 @@ func TestResult(t *testing.T) {
 			want: []*Result{
 				{
 					Amount:   200,
-					Payer:    uid1,
-					Receiver: uid2,
-				},
-			},
-		},
-		{
-			name: "two events with different payer",
-			room: &RoomDetails{
-				Events: []*Event{
-					{
-						Id:        uid1,
-						Name:      "event1",
-						EventType: EventTypeOuter,
-						EventAt:   time1,
-						Txns: []*Transaction{
-							{
-								Id:       uid2,
-								Amount:   100,
-								Payer:    uid1,
-								Receiver: uid2,
-							},
-						},
-						CreatedAt: time1,
-					},
-					{
-						Id:        uid1,
-						Name:      "event2",
-						EventType: EventTypeOuter,
-						EventAt:   time1,
-						Txns: []*Transaction{
-							{
-								Id:       uid2,
-								Amount:   100,
-								Payer:    uid2,
-								Receiver: uid1,
-							},
-						},
-						CreatedAt: time1,
-					},
-				},
-			},
-			want: nil,
-		},
-		{
-			name: "two events with different receiver",
-			room: &RoomDetails{
-				Events: []*Event{
-					{
-						Id:        uid1,
-						Name:      "event1",
-						EventType: EventTypeOuter,
-						EventAt:   time1,
-						Txns: []*Transaction{
-							{
-								Id:       uid2,
-								Amount:   100,
-								Payer:    uid1,
-								Receiver: uid2,
-							},
-						},
-						CreatedAt: time1,
-					},
-					{
-						Id:        uid1,
-						Name:      "event2",
-						EventType: EventTypeOuter,
-						EventAt:   time1,
-						Txns: []*Transaction{
-							{
-								Id:       uid2,
-								Amount:   100,
-								Payer:    uid1,
-								Receiver: uid3,
-							},
-						},
-						CreatedAt: time1,
-					},
-				},
-			},
-			want: []*Result{
-				{
-					Amount:   100,
-					Payer:    uid1,
-					Receiver: uid2,
+					Payer:    uid2,
+					Receiver: uid3,
 				}, {
 					Amount:   100,
 					Payer:    uid1,
 					Receiver: uid3,
 				},
 			},
-		},
-		{
-			name: "two events with different amount",
-			room: &RoomDetails{
-				Events: []*Event{
-					{
-						Id:        uid1,
-						Name:      "event1",
-						EventType: EventTypeOuter,
-						EventAt:   time1,
-						Txns: []*Transaction{
-							{
-								Id:       uid2,
-								Amount:   100,
-								Payer:    uid1,
-								Receiver: uid2,
-							},
-						},
-						CreatedAt: time1,
-					},
-					{
-						Id:        uid1,
-						Name:      "event2",
-						EventType: EventTypeOuter,
-						EventAt:   time1,
-						Txns: []*Transaction{
-							{
-								Id:       uid2,
-								Amount:   200,
-								Payer:    uid1,
-								Receiver: uid2,
-							},
-						},
-						CreatedAt: time1,
-					},
-				},
-			},
-			want: []*Result{
-				{
-					Amount:   300,
-					Payer:    uid1,
-					Receiver: uid2,
-				},
-			},
-		},
-		{
-			name: "two events with different payer",
-			room: &RoomDetails{
-				Events: []*Event{
-					{
-						Id:        uid1,
-						Name:      "event1",
-						EventType: EventTypeOuter,
-						EventAt:   time1,
-						Txns: []*Transaction{
-							{
-								Id:       uid2,
-								Amount:   100,
-								Payer:    uid1,
-								Receiver: uid2,
-							},
-						},
-						CreatedAt: time1,
-					},
-					{
-						Id:        uid1,
-						Name:      "event2",
-						EventType: EventTypeOuter,
-						EventAt:   time1,
-						Txns: []*Transaction{
-							{
-								Id:       uid2,
-								Amount:   100,
-								Payer:    uid3,
-								Receiver: uid2,
-							},
-						},
-						CreatedAt: time1,
-					},
-				},
-			},
-			want: []*Result{
-				{
-					Amount:   100,
-					Payer:    uid1,
-					Receiver: uid2,
-				}, {
-					Amount:   100,
-					Payer:    uid3,
-					Receiver: uid2,
-				},
-			},
-		},
-		{
-			name: "three events with same payer and receiver",
-			room: &RoomDetails{
-				Events: []*Event{
-					{
-						Id:        uid1,
-						Name:      "event1",
-						EventType: EventTypeOuter,
-						EventAt:   time1,
-						Txns: []*Transaction{
-							{
-								Id:       uid2,
-								Amount:   100,
-								Payer:    uid1,
-								Receiver: uid2,
-							},
-						},
-						CreatedAt: time1,
-					},
-					{
-						Id:        uid1,
-						Name:      "event2",
-						EventType: EventTypeOuter,
-						EventAt:   time1,
-						Txns: []*Transaction{
-							{
-								Id:       uid2,
-								Amount:   100,
-								Payer:    uid1,
-								Receiver: uid2,
-							},
-						},
-						CreatedAt: time1,
-					},
-					{
-						Id:        uid1,
-						Name:      "event3",
-						EventType: EventTypeOuter,
-						EventAt:   time1,
-						Txns: []*Transaction{
-							{
-								Id:       uid2,
-								Amount:   100,
-								Payer:    uid1,
-								Receiver: uid2,
-							},
-						},
-						CreatedAt: time1,
-					},
-				},
-			},
-			want: []*Result{
-				{
-					Amount:   300,
-					Payer:    uid1,
-					Receiver: uid2,
-				},
-			},
-		},
-		{
-			name: "three events with same payer and different receivers",
-			room: &RoomDetails{
-				Events: []*Event{
-					{
-						Id:        uid1,
-						Name:      "event1",
-						EventType: EventTypeOuter,
-						EventAt:   time1,
-						Txns: []*Transaction{
-							{
-								Id:       uid2,
-								Amount:   100,
-								Payer:    uid1,
-								Receiver: uid2,
-							},
-						},
-						CreatedAt: time1,
-					},
-					{
-						Id:        uid1,
-						Name:      "event2",
-						EventType: EventTypeOuter,
-						EventAt:   time1,
-						Txns: []*Transaction{
-							{
-								Id:       uid2,
-								Amount:   100,
-								Payer:    uid1,
-								Receiver: uid3,
-							},
-						},
-						CreatedAt: time1,
-					},
-					{
-						Id:        uid1,
-						Name:      "event3",
-						EventType: EventTypeOuter,
-						EventAt:   time1,
-						Txns: []*Transaction{
-							{
-								Id:       uid2,
-								Amount:   100,
-								Payer:    uid1,
-								Receiver: uid4,
-							},
-						},
-						CreatedAt: time1,
-					},
-				},
-			},
-			want: []*Result{
-				{
-					Amount:   100,
-					Payer:    uid1,
-					Receiver: uid2,
-				}, {
-					Amount:   100,
-					Payer:    uid1,
-					Receiver: uid3,
-				}, {
-					Amount:   100,
-					Payer:    uid1,
-					Receiver: uid4,
-				},
-			},
-		},
-		{
-			name: "three events with different payers and same receivers",
-			room: &RoomDetails{
-				Events: []*Event{
-					{
-						Id:        uid1,
-						Name:      "event1",
-						EventType: EventTypeOuter,
-						EventAt:   time1,
-						Txns: []*Transaction{
-							{
-								Id:       uid2,
-								Amount:   100,
-								Payer:    uid1,
-								Receiver: uid2,
-							},
-						},
-						CreatedAt: time1,
-					},
-					{
-						Id:        uid1,
-						Name:      "event2",
-						EventType: EventTypeOuter,
-						EventAt:   time1,
-						Txns: []*Transaction{
-							{
-								Id:       uid2,
-								Amount:   100,
-								Payer:    uid3,
-								Receiver: uid2,
-							},
-						},
-						CreatedAt: time1,
-					},
-					{
-						Id:        uid1,
-						Name:      "event3",
-						EventType: EventTypeOuter,
-						EventAt:   time1,
-						Txns: []*Transaction{
-							{
-								Id:       uid2,
-								Amount:   100,
-								Payer:    uid4,
-								Receiver: uid2,
-							},
-						},
-						CreatedAt: time1,
-					},
-				},
-			},
-			want: []*Result{
-				{
-					Amount:   100,
-					Payer:    uid1,
-					Receiver: uid2,
-				}, {
-					Amount:   100,
-					Payer:    uid3,
-					Receiver: uid2,
-				}, {
-					Amount:   100,
-					Payer:    uid4,
-					Receiver: uid2,
-				},
-			},
-		},
-		{
-			name: "three events with different payers and different receivers",
-			room: &RoomDetails{
-				Events: []*Event{
-					{
-						Id:        uid1,
-						Name:      "event1",
-						EventType: EventTypeOuter,
-						EventAt:   time1,
-						Txns: []*Transaction{
-							{
-								Id:       uid2,
-								Amount:   100,
-								Payer:    uid1,
-								Receiver: uid2,
-							},
-						},
-						CreatedAt: time1,
-					},
-					{
-						Id:        uid1,
-						Name:      "event2",
-						EventType: EventTypeOuter,
-						EventAt:   time1,
-						Txns: []*Transaction{
-							{
-								Id:       uid2,
-								Amount:   100,
-								Payer:    uid3,
-								Receiver: uid4,
-							},
-						},
-						CreatedAt: time1,
-					},
-					{
-						Id:        uid1,
-						Name:      "event3",
-						EventType: EventTypeOuter,
-						EventAt:   time1,
-						Txns: []*Transaction{
-							{
-								Id:       uid2,
-								Amount:   100,
-								Payer:    uid5,
-								Receiver: uid6,
-							},
-						},
-						CreatedAt: time1,
-					},
-				},
-			},
-			want: []*Result{
-				{
-					Amount:   100,
-					Payer:    uid1,
-					Receiver: uid2,
-				}, {
-					Amount:   100,
-					Payer:    uid3,
-					Receiver: uid4,
-				}, {
-					Amount:   100,
-					Payer:    uid5,
-					Receiver: uid6,
-				},
-			},
-		},
-		{
-			name: "three events with different payers and different receivers in three members",
-			room: &RoomDetails{
-				Events: []*Event{
-					{
-						Id:        uid1,
-						Name:      "event1",
-						EventType: EventTypeOuter,
-						EventAt:   time1,
-						Txns: []*Transaction{
-							{
-								Id:       uid2,
-								Amount:   100,
-								Payer:    uid1,
-								Receiver: uid2,
-							},
-						},
-						CreatedAt: time1,
-					},
-					{
-						Id:        uid1,
-						Name:      "event2",
-						EventType: EventTypeOuter,
-						EventAt:   time1,
-						Txns: []*Transaction{
-							{
-								Id:       uid2,
-								Amount:   100,
-								Payer:    uid2,
-								Receiver: uid3,
-							},
-						},
-						CreatedAt: time1,
-					},
-					{
-						Id:        uid1,
-						Name:      "event3",
-						EventType: EventTypeOuter,
-						EventAt:   time1,
-						Txns: []*Transaction{
-							{
-								Id:       uid2,
-								Amount:   100,
-								Payer:    uid3,
-								Receiver: uid1,
-							},
-						},
-						CreatedAt: time1,
-					},
-				},
-			},
-			want: nil,
 		},
 	}
 

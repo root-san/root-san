@@ -1,6 +1,7 @@
 package model
 
 import (
+	"log"
 	"time"
 
 	"github.com/google/uuid"
@@ -35,12 +36,13 @@ func NewRoomDetails(room *Room, members []*Member, events []*Event) *RoomDetails
 	}
 }
 
-type loanValue struct {
-	Id     uuid.UUID
-	Amount int
-}
+// type loanValue struct {
+// 	Id     uuid.UUID
+// 	Amount int
+// }
 
 func (r *RoomDetails) Results() []*Result {
+	log.Print("-------------------------------------")
 	var results []*Result
 	var continueCheck bool = false
 	for _, event := range r.Events {
@@ -72,75 +74,139 @@ func (r *RoomDetails) Results() []*Result {
 		}
 	}
 
-	loan := make(map[uuid.UUID][]loanValue)
-	var breakCheck bool = false
-	for _, result := range results {
-		if result.Amount == 0 {
-			continue
-		}
-		var resultFunc func(payer uuid.UUID, receiver uuid.UUID, amount int)
-		resultFunc = func(payer uuid.UUID, receiver uuid.UUID, amount int) {
-			if payer != receiver {
-				if _, ok := loan[receiver]; !ok {
-					loan[payer] = append(loan[payer], loanValue{
-						Id:     receiver,
-						Amount: amount,
-					})
-				} else {
-					for i := 0; i < len(loan[receiver]); i++ {
-						if amount < loan[receiver][i].Amount {
-							resultFunc(payer, loan[receiver][i].Id, amount)
+	// for _, result := range results {
+	// 	log.Printf("Payer: %s, Receiver: %s, Amount: %d", result.Payer, result.Receiver, result.Amount)
+	// }
 
-							loan[receiver][i].Amount -= amount
-							breakCheck = true
-							break
-						}
-					}
-					if !breakCheck {
-						for i := range loan[receiver] {
-							if amount > loan[receiver][i].Amount {
+	// loan := make(map[uuid.UUID][]loanValue)
+	// var breakCheck bool = false
+	// for _, result := range results {
+	// 	if result.Amount == 0 {
+	// 		continue
+	// 	}
+	// 	var resultFunc func(payer uuid.UUID, receiver uuid.UUID, amount int)
+	// 	resultFunc = func(payer uuid.UUID, receiver uuid.UUID, amount int) {
+	// 		if payer != receiver {
+	// 			log.Print(payer)
+	// 			log.Print(receiver)
+	// 			if _, ok := loan[receiver]; !ok {
+	// 				loan[payer] = append(loan[payer], loanValue{
+	// 					Id:     receiver,
+	// 					Amount: amount,
+	// 				})
+	// 				log.Print(loan)
+	// 			} else {
+	// 				log.Print("aaa")
+	// 				for i := 0; i < len(loan[receiver]); i++ {
+	// 					if amount < loan[receiver][i].Amount {
+	// 						resultFunc(payer, loan[receiver][i].Id, amount)
 
-								resultFunc(payer, loan[receiver][i].Id, amount-loan[receiver][i].Amount)
+	// 						loan[receiver][i].Amount -= amount
+	// 						breakCheck = true
+	// 						break
+	// 					}
+	// 				}
+	// 				if !breakCheck {
+	// 					log.Print("bbb")
+	// 					for i := 0; i < len(loan[receiver]); i++ {
+	// 						if amount > loan[receiver][i].Amount {
 
-								resultFunc(payer, loan[receiver][i].Id, loan[receiver][i].Amount)
+	// 							resultFunc(payer, receiver, amount-loan[receiver][i].Amount)
 
-								// delete number i from loan[receiver]
-								loan[receiver][i] = loan[receiver][len(loan[receiver])-1]
-								loan[receiver][len(loan[receiver])-1] = loanValue{}
-								loan[receiver] = loan[receiver][:len(loan[receiver])-1]
+	// 							resultFunc(payer, loan[receiver][i].Id, loan[receiver][i].Amount)
 
-								break
-							} else if amount == loan[receiver][i].Amount {
+	// 							// delete number i from loan[receiver]
+	// 							loan[receiver][i] = loan[receiver][len(loan[receiver])-1]
+	// 							loan[receiver][len(loan[receiver])-1] = loanValue{}
+	// 							loan[receiver] = loan[receiver][:len(loan[receiver])-1]
 
-								resultFunc(payer, loan[receiver][i].Id, amount)
+	// 							break
+	// 						} else if amount == loan[receiver][i].Amount {
 
-								// delete number i from loan[receiver]
-								loan[receiver][i] = loan[receiver][len(loan[receiver])-1]
-								loan[receiver][len(loan[receiver])-1] = loanValue{}
-								loan[receiver] = loan[receiver][:len(loan[receiver])-1]
+	// 							resultFunc(payer, loan[receiver][i].Id, amount)
 
-								break
-							}
-						}
-					}
-					breakCheck = false
-				}
-			}
-		}
-		resultFunc(result.Payer, result.Receiver, result.Amount)
-	}
+	// 							// delete number i from loan[receiver]
+	// 							loan[receiver][i] = loan[receiver][len(loan[receiver])-1]
+	// 							loan[receiver][len(loan[receiver])-1] = loanValue{}
+	// 							loan[receiver] = loan[receiver][:len(loan[receiver])-1]
 
-	var lastResults []*Result
-	for payer, values := range loan {
-		for _, value := range values {
-			lastResults = append(lastResults, &Result{
-				Amount:   value.Amount,
-				Payer:    payer,
-				Receiver: value.Id,
-			})
-		}
-	}
-	return lastResults
+	// 							log.Print("s")
+	// 							breakCheck = true
+	// 							break
+	// 						}
+	// 					}
+	// 					log.Print("ssssslakjdsf")
+	// 				}
+	// 				log.Print("ssssslakjdsf")
+	// 			}
+
+	// 			log.Print("ssssslakjdsf")
+	// 			if !breakCheck {
+	// 				for upgradePayer, oneLoan := range loan {
+	// 					for i, value := range oneLoan {
+	// 						if value.Id == payer {
+	// 							if amount > value.Amount {
+
+	// 								// delete number i from loan[upgradePayer]
+	// 								log.Print("&&&&&&&&&&&&&&&&&&&&&&")
+	// 								log.Print(loan[upgradePayer][i].Id, loan[upgradePayer][i].Amount)
+	// 								log.Print("&&&&&&&&&&&&&&&&&&&&&&")
+	// 								loan[upgradePayer][i] = loan[upgradePayer][len(loan[upgradePayer])-1]
+	// 								loan[upgradePayer][len(loan[upgradePayer])-1] = loanValue{}
+	// 								loan[upgradePayer] = loan[upgradePayer][:len(loan[upgradePayer])-1]
+	// 								resultFunc(upgradePayer, receiver, value.Amount)
+	// 								resultFunc(payer, receiver, amount-value.Amount)
+	// 								breakCheck = true
+	// 								break
+	// 							} else if amount == value.Amount {
+	// 								// delete number i from loan[upgradePayer]
+	// 								loan[upgradePayer][i] = loan[upgradePayer][len(loan[upgradePayer])-1]
+	// 								loan[upgradePayer][len(loan[upgradePayer])-1] = loanValue{}
+	// 								loan[upgradePayer] = loan[upgradePayer][:len(loan[upgradePayer])-1]
+	// 								resultFunc(upgradePayer, receiver, amount)
+	// 								breakCheck = true
+	// 								break
+	// 							} else if amount < value.Amount {
+	// 								resultFunc(upgradePayer, receiver, amount)
+	// 								loan[upgradePayer][i].Amount -= amount
+	// 								breakCheck = true
+	// 								break
+	// 							}
+	// 						}
+	// 					}
+	// 				}
+	// 			}
+
+	// 			log.Print("ssssslakjdsf")
+	// 			breakCheck = false
+
+	// 			log.Print("ssssslakjdsf")
+	// 		}
+
+	// 		log.Print("ssssslakjdsf")
+	// 	}
+
+	// 	log.Print("zzzzzzzzzzzzzzzzzzz")
+	// 	resultFunc(result.Payer, result.Receiver, result.Amount)
+	// }
+
+	// log.Print("nnnnnnnnnnnnnn")
+
+	// var lastResults []*Result
+	// for payer, values := range loan {
+	// 	for _, value := range values {
+	// 		lastResults = append(lastResults, &Result{
+	// 			Amount:   value.Amount,
+	// 			Payer:    payer,
+	// 			Receiver: value.Id,
+	// 		})
+	// 	}
+	// }
+	// log.Print("==========================================")
+	// for _, result := range lastResults {
+	// 	log.Printf("Payer: %s, Receiver: %s, Amount: %d", result.Payer, result.Receiver, result.Amount)
+	// }
+	return results
 }
 
 type Result struct {
