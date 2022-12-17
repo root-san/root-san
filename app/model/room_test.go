@@ -5,130 +5,64 @@ import (
 	"time"
 
 	"github.com/google/uuid"
+	"github.com/google/go-cmp/cmp"
 )
 
 func TestResult(t *testing.T) {
-	tests := []RoomDetails{
-		RoomDetails{
-			Id:        uuid.New(),
-			Name:      "test",
-			CreatedAt: time.Now(),
-			Members: []*Member{
-				&Member{
-					Id:   uuid.New(),
-					Name: "test1",
-				}, {
-					Id:   uuid.New(),
-					Name: "test2",
+
+	// 比較を行うため事前に生成しておく
+	uid1 := uuid.New()
+	uid2 := uuid.New()
+
+	time1 := time.Now()
+
+	tests := []struct{
+		name string
+		room *RoomDetails
+		want []*Result
+	}{
+		{
+			name: "empty case",
+			room: &RoomDetails{},
+			want: nil,
+		},
+		{
+			name: "one event",
+			room: &RoomDetails{
+				Events: []*Event{
+					{
+						Id: uid1,
+						Name: "event1",
+						EventType: EventTypeOuter,
+						EventAt: time1,
+						Txns: []*Transaction{
+							{
+								Id: uid2,
+								Amount: 100,
+								Payer: uid1,
+								Receiver: uid2,
+							},
+						},
+						CreatedAt: time1,
+					},
 				},
 			},
-			Events: []*Event{
-				&Event{
-					Id:        uuid.New(),
-					Name:      "test",
-					Amount:    100,
-					EventType: EventTypeOuter,
-					EventAt:   time.Now(),
-					Txns: []*Transaction{
-						&Transaction{
-							Id:       uuid.New(),
-							Amount:   100,
-							Payer:    uuid.New(),
-							Receiver: uuid.New(),
-						},
-						{
-							Id:       uuid.New(),
-							Amount:   100,
-							Payer:    uuid.New(),
-							Receiver: uuid.New(),
-						},
-					},
-					CreatedAt: time.Now(),
-				},
+			want: []*Result{
 				{
-					Id:        uuid.New(),
-					Name:      "test",
-					Amount:    100,
-					EventType: EventTypeInner,
-					EventAt:   time.Now(),
-					Txns: []*Transaction{
-						&Transaction{
-							Id:       uuid.New(),
-							Amount:   100,
-							Payer:    uuid.New(),
-							Receiver: uuid.New(),
-						},
-						{
-							Id:       uuid.New(),
-							Amount:   100,
-							Payer:    uuid.New(),
-							Receiver: uuid.New(),
-						},
-					},
-				},
-			},
-		}, {
-			Id:        uuid.New(),
-			Name:      "test",
-			CreatedAt: time.Now(),
-			Members: []*Member{
-				&Member{
-					Id:   uuid.New(),
-					Name: "test1",
-				}, {
-					Id:   uuid.New(),
-					Name: "test2",
-				},
-			},
-			Events: []*Event{
-				&Event{
-					Id:        uuid.New(),
-					Name:      "test",
-					Amount:    100,
-					EventType: EventTypeOuter,
-					EventAt:   time.Now(),
-					Txns: []*Transaction{
-						&Transaction{
-							Id:       uuid.New(),
-							Amount:   100,
-							Payer:    uuid.New(),
-							Receiver: uuid.New(),
-						},
-						{
-							Id:       uuid.New(),
-							Amount:   100,
-							Payer:    uuid.New(),
-							Receiver: uuid.New(),
-						},
-					},
-					CreatedAt: time.Now(),
-				},
-				{
-					Id:        uuid.New(),
-					Name:      "test",
-					Amount:    100,
-					EventType: EventTypeInner,
-					EventAt:   time.Now(),
-					Txns: []*Transaction{
-						&Transaction{
-							Id:       uuid.New(),
-							Amount:   100,
-							Payer:    uuid.New(),
-							Receiver: uuid.New(),
-						},
-						{
-							Id:       uuid.New(),
-							Amount:   100,
-							Payer:    uuid.New(),
-							Receiver: uuid.New(),
-						},
-					},
+					Amount: 100,
+					Payer: uid1,
+					Receiver: uid2,
 				},
 			},
 		},
 	}
 
-	if got := tests.Results(); got != 0 {
-		t.Errorf("got: %d, want: 0", got)
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got := tt.room.Results()
+			if diff := cmp.Diff(tt.want, got); diff != "" {
+				t.Errorf("differs: (-want +got) %s", diff)
+			}
+		})
 	}
 }
