@@ -51,6 +51,29 @@ func (s *Server) GetRoom(ec echo.Context, roomId openapi_types.UUID) error {
 	return ec.JSON(http.StatusOK, parser.Model{}.RoomDetail(r))
 }
 
+// edit room
+// (PUT /rooms/{roomId})
+func (s *Server) EditRoom(ctx echo.Context, roomId openapi_types.UUID) error {
+	req := api.EditRoomJSONRequestBody{}
+	if err := ctx.Bind(&req); err != nil {
+		return catch(ctx, err)
+	}
+	arg := parser.ParseEditRoomJSONRequestBody(req, roomId)
+	if err := s.Repo.UpdateRoom(arg); err != nil {
+		return catch(ctx, err)
+	}
+	return ctx.NoContent(http.StatusNoContent)	
+}
+
+// delete room
+// (DELETE /rooms/{roomId})
+func (s *Server) DeleteRoom(ec echo.Context, roomId openapi_types.UUID) error {
+	if err := s.Repo.DeleteRoom(roomId); err != nil {
+		return catch(ec, err)
+	}
+	return ec.NoContent(http.StatusNoContent)
+}
+
 // add member to room
 // (POST /rooms/{roomId}/members)
 func (s *Server) AddMember(ec echo.Context, roomId openapi_types.UUID) error {
