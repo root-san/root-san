@@ -1,7 +1,6 @@
 package model
 
 import (
-	"log"
 	"time"
 
 	"github.com/google/uuid"
@@ -68,7 +67,6 @@ func (r *RoomDetails) Results() []*Result {
 	}
 	for _, result := range results {
 		if result.Amount < 0 {
-			log.Print("aaaa")
 			result.Amount *= -1
 			result.Payer, result.Receiver = result.Receiver, result.Payer
 		}
