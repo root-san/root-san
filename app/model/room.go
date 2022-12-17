@@ -43,34 +43,42 @@ func NewRoomDetails(room *Room, members []*Member, events []*Event) *RoomDetails
 
 func (r *RoomDetails) Results() []*Result {
 	log.Print("-------------------------------------")
+	var rawResults []*Result
 	var results []*Result
-	var continueCheck bool = false
+	// member同士の組み合わせを作る
+	for i, payer := range r.Members {
+		for j, receiver := range r.Members {
+			if i >= j {
+				continue
+			}
+			rawResults = append(rawResults, &Result{
+				Payer:   payer.Id,
+				Receiver: receiver.Id,
+				Amount: 0,
+			})
+		}
+	}
+
 	for _, event := range r.Events {
 		for _, txn := range event.Txns {
-			for i, result := range results {
+			for i, result := range rawResults {
 				if result.Payer == txn.Payer && result.Receiver == txn.Receiver {
-					results[i].Amount += txn.Amount
-					continueCheck = true
-					continue
+					rawResults[i].Amount -= txn.Amount
 				} else if result.Payer == txn.Receiver && result.Receiver == txn.Payer {
-					results[i].Amount -= txn.Amount
-					continueCheck = true
-					continue
+					rawResults[i].Amount += txn.Amount
 				}
-			}
-			if !continueCheck {
-				results = append(results, &Result{
-					Amount:   txn.Amount,
-					Payer:    txn.Payer,
-					Receiver: txn.Receiver,
-				})
 			}
 		}
 	}
-	for _, result := range results {
-		if result.Amount < 0 {
+	for _, result := range rawResults {
+		if result.Amount == 0 {
+			continue
+		} else if result.Amount < 0 {
 			result.Amount *= -1
 			result.Payer, result.Receiver = result.Receiver, result.Payer
+			results = append(results, result)
+		} else {
+			results = append(results, result)
 		}
 	}
 
