@@ -9,5 +9,6 @@ entrypoint: ./main
 
 http_proxy: 8080
 https: on
+cname: "api.root3.trap.games"
 
 use_mariadb: true
